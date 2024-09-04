@@ -1,0 +1,35 @@
+{
+  "name": "galaxy-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon src/index.ts"
+  },
+  "author": "ikoli",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@sapphire/decorators": "^6.1.0",
+    "@sapphire/framework": "^5.2.1",
+    "@sapphire/ts-config": "^5.0.1",
+    "@sapphire/utilities": "3.15",
+    "discord.js": "^14.15.2",
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.11.0",
+    "nodemon": "^3.1.0",
+    "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^17.0.13",
+    "ts-node": "^9.1.1"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "./data/*",
+      "*.json"
+    ]
+  }
+}
