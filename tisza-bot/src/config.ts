@@ -1,10 +1,10 @@
 import { Config } from "./types/Config";
 
 export const config: Config = {
-    guildId: "868163206911254538",
+    guildId: "758420263951138847",
 
     commandCooldowns: {
-        suggest: 600000,
+        link: 600000,
     },
 
 };
