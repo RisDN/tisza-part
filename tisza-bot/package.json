@@ -1,5 +1,5 @@
 {
-  "name": "galaxy-bot",
+  "name": "tisza-bot",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
@@ -20,6 +20,7 @@
     "galaxy-bot": "file:",
     "mysql2": "^3.11.0",
     "nodemon": "^3.1.0",
+    "tisza-bot": "file:",
     "typescript": "^5.4.5"
   },
   "devDependencies": {
