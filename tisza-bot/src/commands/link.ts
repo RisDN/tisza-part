@@ -60,12 +60,12 @@ export class LinkCommand extends Command {
 
         cooldown?.addCooldown(member.id, config.commandCooldowns.link);
         if (isAlreadyLinked) {
-            await query('UPDATE links SET username = ? WHERE discord_id = ?', [playerName, interaction.user.id]);
-            return interaction.reply({ content: `**Sikeresen** frissítetted a Minecraft karaktered! (${playerName})`, ephemeral: true });
+            // await query('UPDATE links SET username = ? WHERE discord_id = ?', [playerName, interaction.user.id]);
+            // return interaction.reply({ content: `**Sikeresen** frissítetted a Minecraft karaktered! (${playerName})`, ephemeral: true });
+            return interaction.reply({ content: 'Ez a Discord fiók **már össze van kapcsolva** egy Minecraft karakterrel! (**/unlink** a szétkapcsoláshoz)', ephemeral: true });
         }
+
         await query('INSERT INTO links (discord_id, username) VALUES (?, ?)', [interaction.user.id, playerName]);
-
-
         return interaction.reply({ content: `**Sikeresen** összekapcsoltad fiókjaid! (${playerName})`, ephemeral: true });
     }
 }

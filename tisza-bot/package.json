@@ -17,6 +17,7 @@
     "@sapphire/utilities": "3.15",
     "discord.js": "^14.15.2",
     "dotenv": "^16.4.5",
+    "galaxy-bot": "file:",
     "mysql2": "^3.11.0",
     "nodemon": "^3.1.0",
     "typescript": "^5.4.5"
