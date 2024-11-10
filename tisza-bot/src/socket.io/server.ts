@@ -1,6 +1,9 @@
 // simple socket io server with express
 
 import express from "express";
+import { config } from "../config";
+import { getClient } from "..";
+import { BaseGuildTextChannel } from "discord.js";
 
 const app = express();
 
@@ -18,8 +21,14 @@ io.on("connection", (socket: any) => {
   });
 
   socket.on("chat", (msg: string, sender: string) => {
-    // TODO: itt kuldje el a chat uzenetet a discordra (az id ott van a configban)
+    const client = getClient();
+    if (client == null) {
+      console.log("The bot is not running");
+      return;
+    }
     console.log(`message: ${msg} from ${sender}`);
+    const channel = client.channels.cache.get(config.crossChatChannelId) as BaseGuildTextChannel;
+    channel.send(`**${sender}**: ${msg}`);
   });
 });
 
@@ -30,7 +39,7 @@ http.listen(2211, () => {
 export const sendChatMessage = (
   message: string,
   sender: string,
-  messageurl: string
+  messageUrl: string
 ) => {
-  socketConnection.emit("chat", message, sender, messageurl);
+  socketConnection.emit("chat", message, sender, messageUrl);
 };

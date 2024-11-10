@@ -72,6 +72,10 @@ const main = async () => {
   }
 };
 
+export const getClient = (): SapphireClient<boolean> => {
+  return client;
+}
+
 // const rest = new REST().setToken(env.TOKEN ? env.TOKEN : "");
 // rest.put(Routes.applicationCommands('1071745533284204634'), { body: [] }).catch(console.error);
 // rest.put(Routes.applicationGuildCommands("1071745533284204634", "868163206911254538"), { body: [] }).catch(console.error);
