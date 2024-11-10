@@ -3,3 +3,4 @@ socketserver:
   port: 2211
 
 message-format: "&9[Discord] &7%player% > &f%message%"
+split-threshold: 400

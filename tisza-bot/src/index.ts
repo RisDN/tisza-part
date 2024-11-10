@@ -1,7 +1,6 @@
 import { SapphireClient } from "@sapphire/framework";
 import { GatewayIntentBits } from "discord.js";
 import { config } from "dotenv";
-import { sendChatMessage } from "./socket.io/server";
 
 // import { REST, Routes } from "discord.js";
 config();
@@ -58,13 +57,6 @@ const main = async () => {
     await client.login(env.TOKEN);
     client.logger.info("A bot felállt!");
     require("./socket.io/server");
-    setTimeout(() => {
-      sendChatMessage(
-        "Hello, wor",
-        "Server",
-        "https://discord.com/channels/1195719753944289290/1200153833595207872/1305245723779924088"
-      );
-    }, 5000);
   } catch (error) {
     client.logger.fatal(error);
     await client.destroy();
@@ -74,7 +66,7 @@ const main = async () => {
 
 export const getClient = (): SapphireClient<boolean> => {
   return client;
-}
+};
 
 // const rest = new REST().setToken(env.TOKEN ? env.TOKEN : "");
 // rest.put(Routes.applicationCommands('1071745533284204634'), { body: [] }).catch(console.error);

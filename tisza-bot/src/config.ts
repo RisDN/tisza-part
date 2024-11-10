@@ -7,5 +7,5 @@ export const config: Config = {
     link: 600000,
   },
 
-  crossChatChannelId: "",
+  crossChatChannelId: "1305266819472429056",
 };
