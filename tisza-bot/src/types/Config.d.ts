@@ -1,9 +1,9 @@
-
 export type Config = {
-    guildId: string;
+  guildId: string;
 
-    commandCooldowns: {
-        link: number;
-    }
+  commandCooldowns: {
+    link: number;
+  };
 
+  crossChatChannelId: string;
 };

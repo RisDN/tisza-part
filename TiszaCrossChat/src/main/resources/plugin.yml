@@ -1,0 +1,7 @@
+name: TiszaCrossChat
+main: hu.ris.tisszacrosschat.TiszaCrossChat
+version: 1.0
+description: Tisza Cross Chat discord és minecraft chat között
+api-version: 1.21
+author: Ris
+prefix: "TiszaCrossChat"

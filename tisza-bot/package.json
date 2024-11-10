@@ -12,14 +12,17 @@
   "type": "commonjs",
   "dependencies": {
     "@sapphire/decorators": "^6.1.0",
-    "@sapphire/framework": "^5.2.1",
+    "@sapphire/framework": "^5.3.1",
     "@sapphire/ts-config": "^5.0.1",
     "@sapphire/utilities": "3.15",
+    "@types/socket.io": "^3.0.1",
     "discord.js": "^14.15.2",
     "dotenv": "^16.4.5",
+    "express": "^4.21.1",
     "galaxy-bot": "file:",
     "mysql2": "^3.11.0",
     "nodemon": "^3.1.0",
+    "socket.io": "^4.8.1",
     "typescript": "^5.4.5"
   },
   "devDependencies": {
