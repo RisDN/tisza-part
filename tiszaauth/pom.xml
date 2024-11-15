@@ -22,15 +22,32 @@
                     <release>21</release>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <!-- Ha namespace-t szeretnél áthelyezni -->
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
     <repositories>
 
         <repository>
-            <id>purpur</id>
-            <name>Purpur Maven Repo</name>
-            <url>https://repo.purpurmc.org/snapshots</url>
+            <id>papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
 
     </repositories>
@@ -38,10 +55,16 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.purpurmc.purpur</groupId>
-            <artifactId>purpur-api</artifactId>
-            <version>1.21-R0.1-SNAPSHOT</version>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>3.2.0-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bspfsystems</groupId>
+            <artifactId>yamlconfiguration</artifactId>
+            <version>1.3.1</version>
         </dependency>
 
     </dependencies>

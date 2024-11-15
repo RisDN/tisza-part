@@ -3,34 +3,57 @@ package hu.ris.tiszaauth;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import com.google.inject.Inject;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.proxy.ProxyServer;
 
+import hu.ris.tiszaauth.config.Config;
 import hu.ris.tiszaauth.database.MySQLConnection;
 import hu.ris.tiszaauth.listeners.PlayerJoinListener;
 
-public class TiszaAuth extends JavaPlugin {
+@Plugin(id = "tiszaauth", name = "TiszaAuth", version = "1.0-SNAPSHOT", authors = { "Ris" })
+public class TiszaAuth {
 
     private static TiszaAuth instance;
     private static MySQLConnection mysqlConnection;
 
-    @Override
-    public void onEnable() {
-        instance = this;
+    private final ProxyServer server;
+    private final Logger logger;
 
-        saveDefaultConfig();
-        mysqlConnection = new MySQLConnection();
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), instance);
-        getLogger().info("Tisza Auth started.");
+    @Inject
+    public TiszaAuth(ProxyServer server, Logger logger) {
+        instance = this;
+        this.server = server;
+        this.logger = logger;
     }
 
-    @Override
-    public void onDisable() {
-        getLogger().info("Tisza Auth stopped.");
+    private void init() {
+        new Config();
+        mysqlConnection = new MySQLConnection();
+
+        server.getEventManager().register(this, new PlayerJoinListener());
+        logger.info("Tisza Auth started.");
+    }
+
+    @Subscribe
+    public void onProxyInitialization(ProxyInitializeEvent event) {
+        init();
     }
 
     public static TiszaAuth getInstance() {
         return instance;
+    }
+
+    public static ProxyServer getServer() {
+        return instance.server;
+    }
+
+    public static Logger getLogger() {
+        return instance.logger;
     }
 
     public static MySQLConnection getMySQLConnection() {
