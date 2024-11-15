@@ -1,7 +1,0 @@
-name: TiszaAuth
-main: hu.ris.tiszaauth.TiszaAuth
-version: 1.0
-description: Tisza Auth plugin
-api-version: 1.21
-author: Ris
-prefix: "TiszaAuth"

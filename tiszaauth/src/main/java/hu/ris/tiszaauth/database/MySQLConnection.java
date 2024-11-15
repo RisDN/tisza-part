@@ -20,6 +20,15 @@ public class MySQLConnection {
 
     private Connection db;
 
+    static {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            TiszaAuth.getLogger().severe("MySQL JDBC Driver not found!");
+            e.printStackTrace();
+        }
+    }
+
     public MySQLConnection() {
         connectMysql();
     }

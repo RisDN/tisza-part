@@ -1,0 +1,7 @@
+{
+  "id": "tiszaauth",
+  "name": "TiszaAuth",
+  "version": "1.0.0",
+  "authors": ["Ris"],
+  "main": "hu.ris.tiszaauth.TiszaAuth"
+}
