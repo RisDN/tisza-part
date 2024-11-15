@@ -1,0 +1,8 @@
+name: TiszaLobby
+main: hu.ris.tiszalobby.TiszaLobby
+version: 1.0
+description: TiszaLobby plugin
+api-version: 1.21
+author: Ris
+prefix: "TiszaLobby"
+depend: [AuthMe]
