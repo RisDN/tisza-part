@@ -46,6 +46,7 @@ export class UnLinkCommand extends Command {
 
         cooldown?.addCooldown(member.id, config.commandCooldowns.link);
         await query('DELETE FROM links WHERE discord_id = ?', [member.id]);
+        member.roles.remove('1307294590901944370');
         return interaction.reply({ content: '**Sikeresen** szétkapcsoltad fiókjaid!', ephemeral: true });
     }
 }

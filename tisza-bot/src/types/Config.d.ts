@@ -3,6 +3,11 @@ export type Config = {
 
   commandCooldowns: {
     link: number;
+    suggest: number;
+  };
+
+  channels: {
+    suggestion: string;
   };
 
   crossChatChannelId: string;

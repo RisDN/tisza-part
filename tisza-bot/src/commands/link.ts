@@ -66,6 +66,7 @@ export class LinkCommand extends Command {
         }
 
         await query('INSERT INTO links (discord_id, username) VALUES (?, ?)', [interaction.user.id, playerName]);
+        member.roles.add('1307294590901944370');
         return interaction.reply({ content: `**Sikeresen** összekapcsoltad fiókjaid! (${playerName})`, ephemeral: true });
     }
 }
