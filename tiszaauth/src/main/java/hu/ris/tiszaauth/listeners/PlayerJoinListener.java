@@ -5,7 +5,8 @@ import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 
 import hu.ris.tiszaauth.TiszaAuth;
 import hu.ris.tiszaauth.cache.CachedPlayers;
-import net.kyori.adventure.text.Component;
+import hu.ris.tiszaauth.config.Config;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class PlayerJoinListener {
 
@@ -20,14 +21,12 @@ public class PlayerJoinListener {
         }
 
         TiszaAuth.getServer().getScheduler().buildTask(plugin, () -> {
-
             if (TiszaAuth.isPlayerLinked(playerName)) {
                 CachedPlayers.addPlayer(playerName);
                 return;
             }
-
             TiszaAuth.getServer().getScheduler().buildTask(plugin, () -> {
-                event.getPlayer().disconnect(Component.text("§cAmíg nem csatlakoztattad össze a Discord fiókodat a karaktereddel, addig nem tudsz belépni a szerverre!"));
+                event.getPlayer().disconnect(MiniMessage.miniMessage().deserialize(Config.getString("messages.not_linked").replaceAll("§", "").replaceAll("&", "")));
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
             }).schedule();
 

@@ -45,6 +45,8 @@ public class Config {
         setDefaultConfig("mysql.pass", "password");
         setDefaultConfig("mysql.table", "links");
 
+        setDefaultConfig("messages.not_linked", "<red>Ez a felhasználó nincs összekapcsolva a Discord fiókoddal. Kérlek csatlakozz a Discord szerverünkhöz és kövesd az instrukciókat! https://discord.gg/YjBkzgCZtx");
+
         saveConfig();
     }
 
