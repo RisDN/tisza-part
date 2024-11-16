@@ -43,6 +43,7 @@ public class TiszaLobby extends JavaPlugin implements Listener {
                 continue;
             }
             p.getPlayer().hidePlayer(this, player);
+            player.hidePlayer(this, p);
         }
     }
 
