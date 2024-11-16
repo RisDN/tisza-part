@@ -4,8 +4,8 @@ export const config: Config = {
   guildId: "1017840952074846258",
 
   commandCooldowns: {
-    suggest: 60000,
-    link: 600000,
+    suggest: 900000, // 15 minutes
+    link: 600000, // 10 minutes
   },
 
   channels: {
