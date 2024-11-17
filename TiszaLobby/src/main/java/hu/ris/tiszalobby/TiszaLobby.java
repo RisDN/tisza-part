@@ -6,6 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.xephi.authme.events.LoginEvent;
 
@@ -42,8 +44,13 @@ public class TiszaLobby extends JavaPlugin implements Listener {
             if (p.getPlayer() == null) {
                 continue;
             }
-            p.getPlayer().hidePlayer(this, player);
-            player.hidePlayer(this, p);
+            if (!player.hasPermission("tiszalobby.bypass")) {
+                if (!p.hasPermission("tiszalobby.bypass")) {
+                    p.getPlayer().hidePlayer(this, player);
+                }
+                player.hidePlayer(this, p);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, -1, 1, false, false, false));
+            }
         }
     }
 
