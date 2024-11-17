@@ -24,6 +24,9 @@ export class MessageListener extends Listener {
     }
 
     if (message.content.length == 0) return;
+    message.mentions.users.forEach(member => {
+      message.content = message.content.replaceAll('<@' + member.id + '>', '@' + member.displayName);
+    });
 
     sendChatMessage(message.content, message.author.displayName, message.url);
   }
