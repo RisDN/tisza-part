@@ -40,17 +40,19 @@ public class TiszaLobby extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        for (Player p : getServer().getOnlinePlayers()) {
-            if (p.getPlayer() == null) {
+        for (Player ply : getServer().getOnlinePlayers()) {
+            if (ply.getPlayer() == null) {
                 continue;
             }
             if (!player.hasPermission("tiszalobby.bypass")) {
-                if (!p.hasPermission("tiszalobby.bypass")) {
-                    p.getPlayer().hidePlayer(this, player);
-                }
-                player.hidePlayer(this, p);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, -1, 1, false, false, false));
+                player.hidePlayer(this, ply);
             }
+            if (!ply.hasPermission("tiszalobby.bypass")) {
+                ply.hidePlayer(this, player);
+            }
+        }
+        if (!player.hasPermission("tiszalobby.bypass")) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, -1, 1, false, false, false));
         }
     }
 
