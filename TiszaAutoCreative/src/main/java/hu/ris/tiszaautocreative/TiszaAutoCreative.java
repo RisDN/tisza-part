@@ -1,8 +1,10 @@
 package hu.ris.tiszaautocreative;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,9 +29,14 @@ public class TiszaAutoCreative extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if (!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
-            event.getPlayer().setGameMode(GameMode.CREATIVE);
-        }
+        Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+            @Override
+            public void run() {
+                if (!event.getPlayer().getGameMode().equals(GameMode.CREATIVE)) {
+                    event.getPlayer().setGameMode(GameMode.CREATIVE);
+                }
+            }
+        }, 10);
     }
 
 }
