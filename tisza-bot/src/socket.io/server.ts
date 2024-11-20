@@ -27,7 +27,9 @@ io.on("connection", (socket: any) => {
       return;
     }
     console.log(`message: ${msg} from ${sender}`);
-    const channel = client.channels.cache.get(config.crossChatChannelId) as BaseGuildTextChannel;
+    const channel = client.channels.cache.get(
+      config.crossChatChannelId
+    ) as BaseGuildTextChannel;
     channel.send(`**${sender}**: ${msg}`);
   });
 });
@@ -41,5 +43,7 @@ export const sendChatMessage = (
   sender: string,
   messageUrl: string
 ) => {
+  message = message.replaceAll("&", "");
+  message = message.replaceAll("§", "");
   socketConnection.emit("chat", message, sender, messageUrl);
 };
