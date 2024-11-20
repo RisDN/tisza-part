@@ -1,0 +1,2 @@
+commands-run-after-login:
+  - "deluxemenu open selector %player%"

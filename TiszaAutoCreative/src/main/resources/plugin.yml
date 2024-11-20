@@ -1,0 +1,7 @@
+name: TiszaAutoCreative
+main: hu.ris.tiszaautocreative.TiszaAutoCreative
+version: 1.0
+description: TiszaAutoCreative plugin
+api-version: 1.21
+author: Ris
+prefix: "TiszaAutoCreative"
