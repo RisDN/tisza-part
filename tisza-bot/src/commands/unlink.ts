@@ -1,6 +1,7 @@
 import { Command } from '@sapphire/framework';
 import { config } from '../config';
 import query from '../database/db';
+import crypto from "crypto";
 import { CooldownService } from '../services/CooldownService';
 
 
@@ -39,9 +40,15 @@ export class UnLinkCommand extends Command {
             return
         }
 
-        const isLinked = (await query('SELECT * FROM links WHERE discord_id = ?', [member.id]) as any[]).length > 0;
-        if (!isLinked) {
+        const links = (await query('SELECT * FROM links WHERE discord_id = ?', [member.id]) as any[]);
+        if (links.length == 0) {
             return interaction.reply({ content: 'Ez a Discord fiók egy karakterhez sincs kapcsolva!', ephemeral: true });
+        }
+
+        const uuid = crypto.createHash('md5').update(`$OfflinePlayer:${links[0].username}`).digest('hex');
+        const bans = (await query('SELECT * FROM litebans_bans WHERE uuid = ? AND active = 1', [uuid]) as any[]);
+        if (bans.length > 0) {
+            return interaction.reply({ content: 'Ez a karakter **bannolva van** a szerveren, nem tudod szétkapcsolni!', ephemeral: true });
         }
 
         cooldown?.addCooldown(member.id, config.commandCooldowns.link);

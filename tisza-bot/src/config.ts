@@ -12,5 +12,5 @@ export const config: Config = {
     suggestion: "1307293114624507964"
   },
 
-  crossChatChannelId: "1305266819472429056",
+  crossChatChannelId: "1307126318592299108",
 };

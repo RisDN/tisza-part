@@ -58,13 +58,13 @@ export class LinkCommand extends Command {
 
         const isAlreadyLinked = (await query('SELECT * FROM links WHERE discord_id = ?', [interaction.user.id]) as any[]).length > 0;
 
-        cooldown?.addCooldown(member.id, config.commandCooldowns.link);
         if (isAlreadyLinked) {
             // await query('UPDATE links SET username = ? WHERE discord_id = ?', [playerName, interaction.user.id]);
             // return interaction.reply({ content: `**Sikeresen** frissítetted a Minecraft karaktered! (${playerName})`, ephemeral: true });
             return interaction.reply({ content: 'Ez a Discord fiók **már össze van kapcsolva** egy Minecraft karakterrel! (**/unlink** a szétkapcsoláshoz)', ephemeral: true });
         }
 
+        cooldown?.addCooldown(member.id, config.commandCooldowns.link);
         await query('INSERT INTO links (discord_id, username) VALUES (?, ?)', [interaction.user.id, playerName]);
         member.roles.add('1307294590901944370');
         return interaction.reply({ content: `**Sikeresen** összekapcsoltad fiókjaid! (${playerName})`, ephemeral: true });
