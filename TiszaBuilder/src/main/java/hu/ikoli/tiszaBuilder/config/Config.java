@@ -23,8 +23,8 @@ public class Config {
     }
 
     public static String getMessage(String node) {
-        if (plugin.getConfig().getString("messages." + node) != null) {
-            return Utils.color(plugin.getConfig().getString("messages." + node)).replace("%prefix%", getPrefix());
+        if (config.getString("messages." + node) != null) {
+            return Utils.color(config.getString("messages." + node)).replace("%prefix%", getPrefix());
         }
         return Utils.color("&cNincs ilyen üzenet a configban: messages." + node);
     }
@@ -50,15 +50,12 @@ public class Config {
             e.printStackTrace();
         }
 
-        reloadConfig();
-
         setConfig("prefix", "&8[&eTiszaBuilder&8] »");
 
         setConfig("messages.no-permission", "%prefix% &cNincs jogosultságod ehhez!");
         setConfig("messages.reloaded", "%prefix% &aConfig újratöltve!");
 
         saveConfig();
-
     }
 
     public static void reloadConfig() {
@@ -90,39 +87,39 @@ public class Config {
     }
 
     public static String getPrefix() {
-        return Utils.color(plugin.getConfig().getString("prefix"));
+        return Utils.color(config.getString("prefix"));
     }
 
     public static List<Integer> getIntegerList(String node) {
-        return plugin.getConfig().getIntegerList(node);
+        return config.getIntegerList(node);
     }
 
     public static List<String> getStringList(String node) {
-        return plugin.getConfig().getStringList(node);
+        return config.getStringList(node);
     }
 
     public static ConfigurationSection getConfigurationSection(String node) {
-        return plugin.getConfig().getConfigurationSection(node);
+        return config.getConfigurationSection(node);
     }
 
     public static int getInt(String node) {
-        return plugin.getConfig().getInt(node);
+        return config.getInt(node);
     }
 
     public static double getDouble(String node) {
-        return plugin.getConfig().getDouble(node);
+        return config.getDouble(node);
     }
 
     public static String getString(String node) {
-        return plugin.getConfig().getString(node);
+        return config.getString(node);
     }
 
     public static boolean getBoolean(String node) {
-        return plugin.getConfig().getBoolean(node);
+        return config.getBoolean(node);
     }
 
     private static void setConfig(String node, Object value) {
-        plugin.getConfig().set(node, plugin.getConfig().get(node, value));
+        config.set(node, config.get(node, value));
     }
 
 }

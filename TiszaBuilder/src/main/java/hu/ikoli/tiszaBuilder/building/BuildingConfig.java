@@ -123,13 +123,13 @@ public abstract class BuildingConfig {
                 for (BlockVector3 blockPosition : clipboard.getRegion()) {
                     BlockState blockState = clipboard.getBlock(blockPosition);
 
-                    if (blockState.getBlockType().getName().contains("air")) {
+                    if (blockState.getBlockType().getMaterial().isAir()) {
                         continue;
                     }
 
-                    int relativeX = blockPosition.getX() - origin.getX();
-                    int relativeY = blockPosition.getY() - origin.getY();
-                    int relativeZ = blockPosition.getZ() - origin.getZ();
+                    int relativeX = blockPosition.x() - origin.x();
+                    int relativeY = blockPosition.y() - origin.y();
+                    int relativeZ = blockPosition.z() - origin.z();
 
                     Location location = startingPosition.clone().add(relativeX, relativeY, relativeZ);
                     Material material = BukkitAdapter.adapt(blockState.getBlockType());
