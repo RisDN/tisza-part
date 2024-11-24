@@ -1,4 +1,4 @@
-package hu.ikoli.tiszaBuilder.config;
+package hu.ikoli.tiszabuilder.config;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +8,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import hu.ikoli.tiszaBuilder.TiszaBuilder;
-import hu.ikoli.tiszaBuilder.utils.Utils;
+import hu.ikoli.tiszabuilder.TiszaBuilder;
+import hu.ikoli.tiszabuilder.utils.Utils;
 
 public class Config {
 
@@ -18,6 +18,7 @@ public class Config {
     private static YamlConfiguration config;
 
     public Config() {
+        folder = new File(TiszaBuilder.getPluginDataFolder(), "config.yml").toPath().getParent().toFile();
         setDefaultConfig();
     }
 
@@ -49,10 +50,14 @@ public class Config {
             e.printStackTrace();
         }
 
+        reloadConfig();
+
         setConfig("prefix", "&8[&eTiszaBuilder&8] »");
 
         setConfig("messages.no-permission", "%prefix% &cNincs jogosultságod ehhez!");
         setConfig("messages.reloaded", "%prefix% &aConfig újratöltve!");
+
+        saveConfig();
 
     }
 

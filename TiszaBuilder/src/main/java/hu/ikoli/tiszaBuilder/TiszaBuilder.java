@@ -1,40 +1,64 @@
-package hu.ikoli.tiszaBuilder;
+package hu.ikoli.tiszabuilder;
+
+import java.io.File;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import hu.ikoli.tiszaBuilder.config.Config;
-import hu.ikoli.tiszaBuilder.listeners.CommandListener;
+import hu.ikoli.tiszabuilder.building.Building;
+import hu.ikoli.tiszabuilder.config.Config;
+import hu.ikoli.tiszabuilder.listeners.CommandListener;
 
 public class TiszaBuilder extends JavaPlugin {
 
-  private static TiszaBuilder instance;
-  private static Config config;
-  private static PlaceholderManager placeholderManager;
+	private static TiszaBuilder instance;
+	private static Config config;
+	private static PlaceholderManager placeholderManager;
+	private static File pluginDataFolder;
 
-  public TiszaBuilder() {
-    instance = this;
-    config = new Config();
-    placeholderManager = new PlaceholderManager();
-  }
+	public void onEnable() {
+		instance = this;
 
-  public void onEnable() {
-    CommandListener commandListener = new CommandListener();
-    getCommand("builder").setExecutor(commandListener);
-    getServer().getPluginManager().registerEvents(commandListener, instance);
-    getLogger().info("Builder plugin has been enabled!");
-  }
+		CommandListener commandListener = new CommandListener();
+		getCommand("builder").setExecutor(commandListener);
+		getServer().getPluginManager().registerEvents(commandListener, instance);
+		getLogger().info("Builder plugin has been enabled!");
 
-  public void onDisable() {
-    placeholderManager.unregister();
-    getLogger().info("Builder plugin has been disabled!");
-  }
+		pluginDataFolder = getDataFolder();
+		config = new Config();
+		placeholderManager = new PlaceholderManager();
 
-  public static TiszaBuilder getInstance() {
-    return instance;
-  }
+		File buildingFolder = new File(getDataFolder(), "buildings");
+		if (!buildingFolder.exists()) {
+			buildingFolder.mkdirs();
+			return;
+		}
 
-  public static Config getConfiguration() {
-    return config;
-  }
+		for (File file : buildingFolder.listFiles()) {
+			if (file.getName().endsWith(".yml")) {
+				new Building(file.getName().replace(".yml", ""));
+			}
+		}
+	}
+
+	public void onDisable() {
+		placeholderManager.unregister();
+		getLogger().info("Builder plugin has been disabled!");
+	}
+
+	public static TiszaBuilder getInstance() {
+		return instance;
+	}
+
+	public static Config getConfiguration() {
+		return config;
+	}
+
+	public static PlaceholderManager getPlaceholderManager() {
+		return placeholderManager;
+	}
+
+	public static File getPluginDataFolder() {
+		return pluginDataFolder;
+	}
 
 }

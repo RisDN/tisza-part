@@ -1,9 +1,9 @@
-package hu.ikoli.tiszaBuilder;
+package hu.ikoli.tiszabuilder;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import hu.ikoli.tiszaBuilder.config.Config;
+import hu.ikoli.tiszabuilder.config.Config;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class PlaceholderManager {
@@ -32,7 +32,7 @@ public class PlaceholderManager {
 
             @Override
             public @NotNull String getAuthor() {
-                return "ikoliHU & RisDN";
+                return "ikoliHU & Ris";
             }
 
             @Override

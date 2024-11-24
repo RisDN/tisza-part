@@ -1,4 +1,4 @@
-package hu.ikoli.tiszaBuilder.utils;
+package hu.ikoli.tiszabuilder.utils;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import hu.ikoli.tiszaBuilder.config.Config;
+import hu.ikoli.tiszabuilder.config.Config;
 import net.md_5.bungee.api.ChatColor;
 
 public class Utils {

@@ -1,4 +1,4 @@
-package hu.ikoli.tiszaBuilder.utils;
+package hu.ikoli.tiszabuilder.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,17 +7,16 @@ import java.io.InputStreamReader;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import hu.ikoli.tiszaBuilder.TiszaBuilder;
+import hu.ikoli.tiszabuilder.TiszaBuilder;
 
 public class FileManager {
 
-    private TiszaBuilder plugin;
+    private TiszaBuilder plugin = TiszaBuilder.getInstance();
     private FileConfiguration file = null;
     private File configFile = null;
     private String filename = null;
 
-    public FileManager(TiszaBuilder plugin, String fileName) {
-        this.plugin = plugin;
+    public FileManager(String fileName) {
         filename = fileName;
         saveDefaultConfig();
     }
