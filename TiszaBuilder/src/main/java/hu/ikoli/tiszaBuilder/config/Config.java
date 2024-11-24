@@ -13,7 +13,6 @@ import hu.ikoli.tiszabuilder.utils.Utils;
 
 public class Config {
 
-    private static TiszaBuilder plugin = TiszaBuilder.getInstance();
     private static File folder;
     private static YamlConfiguration config;
 
