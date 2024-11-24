@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import hu.ikoli.tiszabuilder.building.Building;
+import hu.ikoli.tiszabuilder.building.ItemAdding;
 import hu.ikoli.tiszabuilder.config.Config;
 
 public class CommandListener implements CommandExecutor, Listener {
@@ -16,6 +17,16 @@ public class CommandListener implements CommandExecutor, Listener {
         if (!(sender instanceof Player player)) {
             return true;
         }
+
+        if (args.length == 0) {
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("additems")) {
+            ItemAdding.openItemAddingMenu(player);
+            return true;
+        }
+
         if (player.hasPermission("tiszabuilder.admin")) {
             if (args.length == 0) {
                 player.sendMessage("§cUsage: /tiszabuilder <reload | show>");

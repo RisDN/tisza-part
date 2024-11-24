@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import hu.ikoli.tiszabuilder.building.Building;
 import hu.ikoli.tiszabuilder.config.Config;
 import hu.ikoli.tiszabuilder.listeners.CommandListener;
+import hu.ikoli.tiszabuilder.listeners.InventoryCloseListener;
 
 public class TiszaBuilder extends JavaPlugin {
 
@@ -21,7 +22,8 @@ public class TiszaBuilder extends JavaPlugin {
 		CommandListener commandListener = new CommandListener();
 		getCommand("builder").setExecutor(commandListener);
 		getServer().getPluginManager().registerEvents(commandListener, instance);
-		getLogger().info("Builder plugin has been enabled!");
+
+		getServer().getPluginManager().registerEvents(new InventoryCloseListener(), this);
 
 		pluginDataFolder = getDataFolder();
 		config = new Config();
@@ -38,10 +40,17 @@ public class TiszaBuilder extends JavaPlugin {
 				new Building(file.getName().replace(".yml", ""));
 			}
 		}
+
+		getLogger().info("Builder plugin has been enabled!");
 	}
 
 	public void onDisable() {
 		placeholderManager.unregister();
+
+		for (Building building : Building.getBuildings()) {
+			building.stopBuildingTask();
+		}
+
 		getLogger().info("Builder plugin has been disabled!");
 	}
 
