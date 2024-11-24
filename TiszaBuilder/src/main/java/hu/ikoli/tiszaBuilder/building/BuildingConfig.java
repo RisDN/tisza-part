@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -19,6 +21,7 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.registry.state.Property;
 import com.sk89q.worldedit.world.block.BlockState;
 
 import hu.ikoli.tiszabuilder.TiszaBuilder;
@@ -132,6 +135,14 @@ public abstract class BuildingConfig {
                     int relativeZ = blockPosition.z() - origin.z();
 
                     Location location = startingPosition.clone().add(relativeX, relativeY, relativeZ);
+                    BlockFace blockFace = null;
+
+                    for (Entry<Property<?>, Object> state : blockState.getStates().entrySet()) {
+                        if (state.getKey().getName().equals("facing")) {
+                            blockFace = BlockFace.valueOf(state.getValue().toString());
+                        }
+                    }
+
                     Material material = BukkitAdapter.adapt(blockState.getBlockType());
 
                     if (material.isAir()) {
@@ -144,7 +155,7 @@ public abstract class BuildingConfig {
                         blocksNeeded.put(material, 1);
                     }
 
-                    allBlocksNeeded.add(new SchemBlock(location, material));
+                    allBlocksNeeded.add(new SchemBlock(location, material, blockFace));
                 }
             }
         } catch (Exception e) {

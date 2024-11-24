@@ -7,6 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.Directional;
 import org.bukkit.inventory.ItemStack;
 
 import hu.ikoli.tiszabuilder.TiszaBuilder;
@@ -54,18 +57,28 @@ public class Building extends BuildingConfig {
                     new Runnable() {
                         @Override
                         public void run() {
-                            Location nextBlockLocation = getNextBlockLocation(item.getType());
-                            getWorld().getBlockAt(nextBlockLocation).setType(item.getType());
+                            SchemBlock schemBlock = getNextBlock(item.getType());
+                            Location nextBlockLocation = schemBlock.getLocation();
+                            Block block = getWorld().getBlockAt(nextBlockLocation);
+                            block.setType(item.getType());
+                            BlockState blockState = block.getState();
+
+                            if (blockState.getBlockData() instanceof Directional directional) {
+                                directional.setFacing(schemBlock.getBlockFace());
+                                blockState.setBlockData(directional);
+                                blockState.update(true);
+                            }
+
                             removeBlock(nextBlockLocation);
                         }
                     }, delay);
         }
     }
 
-    public Location getNextBlockLocation(Material material) {
+    public SchemBlock getNextBlock(Material material) {
         for (SchemBlock schemBlock : getAllBlocksNeeded()) {
             if (schemBlock.getMaterial() == material && !schemBlock.isPlaced()) {
-                return schemBlock.getLocation();
+                return schemBlock;
             }
         }
         return null;
