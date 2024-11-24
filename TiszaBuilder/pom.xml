@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>hu.ikoli</groupId>
-	<artifactId>builder</artifactId>
+	<artifactId>tiszaBuilder</artifactId>
 	<version>1.0.0</version>
 
 	<properties>
@@ -24,18 +24,6 @@
 			<id>placeholderapi</id>
 			<url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-		<repository>
-			<id>krypton</id>
-			<url>https://repo.kryptonmc.org/releases</url>
-		</repository>
-		<repository>
-			<id>citizens-repo</id>
-			<url>https://maven.citizensnpcs.co/repo</url>
-		</repository>
 	</repositories>
 
 	<dependencies>
@@ -45,10 +33,16 @@
 			<version>1.21.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>me.clip</groupId>
+			<artifactId>placeholderapi</artifactId>
+			<version>2.11.6</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
-		<finalName>Builder</finalName>
+		<finalName>TiszaBuilder</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>

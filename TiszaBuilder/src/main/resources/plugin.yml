@@ -2,6 +2,8 @@ name: TiszaBuilder
 main: hu.ikoli.builder.Builder
 version: 1.0
 api-version: 1.21
+author: ikoli, Ris
+soft-depend: [PlaceholderAPI]
 
 commands:
   build:
