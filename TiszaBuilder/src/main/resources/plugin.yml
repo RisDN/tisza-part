@@ -1,4 +1,4 @@
-name: builder
+name: TiszaBuilder
 main: hu.ikoli.builder.Builder
 version: 1.0
 api-version: 1.21
