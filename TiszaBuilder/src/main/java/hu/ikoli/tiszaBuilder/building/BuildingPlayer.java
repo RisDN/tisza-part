@@ -23,13 +23,11 @@ public class BuildingPlayer {
 
     public BuildingPlayer(Player player) {
         this.player = player;
-        System.err.println("BuildingPlayer: " + player.getName());
         String node = player.getName() + ".";
 
         for (String blocks : playerData.getConfig().getStringList(node + "placed-blocks-type")) {
             String[] block = blocks.split(":");
             placedBuildingBlocks.put(block[0], Integer.parseInt(block[1]));
-            System.out.println("Loading: " + block[0] + ":" + block[1]);
         }
 
         this.blocksPlaced = placedBuildingBlocks.values().stream().mapToInt(Integer::intValue).sum();
@@ -79,10 +77,8 @@ public class BuildingPlayer {
     }
 
     public void save() {
-        System.out.println("Saving player: " + player.getName());
         List<String> blocks = new ArrayList<String>();
         for (String block : placedBuildingBlocks.keySet()) {
-            System.out.println("Saving: " + block + ":" + placedBuildingBlocks.get(block));
             blocks.add(block + ":" + placedBuildingBlocks.get(block));
         }
         playerData.getConfig().set(player.getName() + ".placed-blocks-type", blocks);
