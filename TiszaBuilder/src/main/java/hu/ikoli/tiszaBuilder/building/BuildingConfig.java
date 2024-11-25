@@ -26,6 +26,7 @@ import com.sk89q.worldedit.world.block.BlockState;
 
 import hu.ikoli.tiszabuilder.TiszaBuilder;
 import hu.ikoli.tiszabuilder.utils.FileManager;
+import hu.ikoli.tiszabuilder.utils.Utils;
 
 public abstract class BuildingConfig {
 
@@ -79,15 +80,15 @@ public abstract class BuildingConfig {
     }
 
     public String getDisplayname() {
-        return displayname;
+        return Utils.color(displayname);
     }
 
     public List<SchemBlock> getAllBlocksNeeded() {
-        return allBlocksNeeded;
+        return new ArrayList<>(allBlocksNeeded);
     }
 
     public Map<Material, Integer> getBlocksNeeded() {
-        return blocksNeeded;
+        return new HashMap<>(blocksNeeded);
     }
 
     public FileConfiguration getConfig() {

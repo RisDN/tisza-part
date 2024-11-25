@@ -3,7 +3,10 @@ package hu.ikoli.tiszabuilder;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import hu.ikoli.tiszabuilder.building.Building;
+import hu.ikoli.tiszabuilder.building.BuildingPlayer;
 import hu.ikoli.tiszabuilder.config.Config;
+import hu.ikoli.tiszabuilder.utils.Utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class PlaceholderManager {
@@ -45,7 +48,48 @@ public class PlaceholderManager {
                     return Config.getPrefix();
                 }
 
-                return null;
+                Building building = Building.getBuildings().get(0);
+
+                if (building == null) {
+                    return "???";
+                }
+
+                BuildingPlayer buildingPlayer = BuildingPlayer.getBuildingPlayer(player);
+
+                if (identifier.equalsIgnoreCase("building_displayname")) {
+                    return building.getDisplayname();
+                }
+
+                if (identifier.equalsIgnoreCase("building_filename")) {
+                    return building.getFileName();
+                }
+
+                if (identifier.equalsIgnoreCase("building_progress")) {
+                    return String.valueOf(Utils.round(building.getProgress(), 2));
+                }
+
+                if (identifier.equalsIgnoreCase("building_blocks_needed")) {
+                    return String.valueOf(building.getAllBlocksRequiredCount());
+                }
+
+                if (identifier.equalsIgnoreCase("building_blocks_placed")) {
+                    return String.valueOf(building.getPlacedBlocksCount());
+                }
+
+                if (identifier.equalsIgnoreCase("building_contributors")) {
+                    return String.valueOf(BuildingPlayer.getContributorsCount());
+                }
+
+                if (identifier.equalsIgnoreCase("player_blocks_placed")) {
+                    return String.valueOf(buildingPlayer.getBlocksPlaced());
+                }
+
+                if (identifier.equalsIgnoreCase("player_blocks_placed_progress")) {
+                    return String.valueOf(Utils.round(building.getProgress(buildingPlayer), 2));
+
+                }
+
+                return "-";
             }
         };
         placeholderExpansion.register();

@@ -10,6 +10,7 @@ import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Directional;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import hu.ikoli.tiszabuilder.TiszaBuilder;
@@ -40,6 +41,31 @@ public class Building extends BuildingConfig {
                         build();
                     }
                 }, 5, 5);
+    }
+
+    public int getPlacedBlocksCount() {
+        int sum = 0;
+        for (SchemBlock schemBlock : getAllBlocksNeeded()) {
+            if (!schemBlock.isPlaced()) {
+                continue;
+            }
+
+            sum++;
+        }
+
+        return sum;
+    }
+
+    public double getProgress() {
+        return (double) getPlacedBlocksCount() / getAllBlocksRequiredCount() * 100;
+    }
+
+    public double getProgress(BuildingPlayer player) {
+        return (double) player.getBlocksPlaced() / getAllBlocksRequiredCount() * 100;
+    }
+
+    public int getAllBlocksRequiredCount() {
+        return getAllBlocksNeeded().size();
     }
 
     public void build() {

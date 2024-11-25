@@ -18,20 +18,16 @@ public class BuildingPlayer {
 
     private Player player;
 
-    private int blocksPlaced = 0;
     private Map<String, Integer> placedBuildingBlocks = new HashMap<String, Integer>();
 
     public BuildingPlayer(Player player) {
         this.player = player;
-        String node = player.getName() + ".";
+        String node = "players." + player.getName() + ".";
 
         for (String blocks : playerData.getConfig().getStringList(node + "placed-blocks-type")) {
             String[] block = blocks.split(":");
             placedBuildingBlocks.put(block[0], Integer.parseInt(block[1]));
         }
-
-        this.blocksPlaced = placedBuildingBlocks.values().stream().mapToInt(Integer::intValue).sum();
-
         buildingPlayers.add(this);
     }
 
@@ -42,8 +38,6 @@ public class BuildingPlayer {
         } else {
             placedBuildingBlocks.put(block, item.getAmount());
         }
-
-        this.blocksPlaced = placedBuildingBlocks.values().stream().mapToInt(Integer::intValue).sum();
     }
 
     public static List<BuildingPlayer> getBuildingPlayers() {
@@ -65,7 +59,7 @@ public class BuildingPlayer {
     }
 
     public int getBlocksPlaced() {
-        return blocksPlaced;
+        return placedBuildingBlocks.values().stream().mapToInt(Integer::intValue).sum();
     }
 
     public int getBlocksPlaced(String block) {
@@ -81,9 +75,13 @@ public class BuildingPlayer {
         for (String block : placedBuildingBlocks.keySet()) {
             blocks.add(block + ":" + placedBuildingBlocks.get(block));
         }
-        playerData.getConfig().set(player.getName() + ".placed-blocks-type", blocks);
+        playerData.getConfig().set("players." + player.getName() + ".placed-blocks-type", blocks);
 
         playerData.saveConfig();
+    }
+
+    public static int getContributorsCount() {
+        return playerData.getConfig().getConfigurationSection("players").getKeys(false).size();
     }
 
 }
