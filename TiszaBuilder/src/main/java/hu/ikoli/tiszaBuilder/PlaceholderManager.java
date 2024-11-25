@@ -86,7 +86,10 @@ public class PlaceholderManager {
 
                 if (identifier.equalsIgnoreCase("player_blocks_placed_progress")) {
                     return String.valueOf(Utils.round(building.getProgress(buildingPlayer), 2));
+                }
 
+                if (identifier.equalsIgnoreCase("player_contrubution_place")) {
+                    return String.valueOf(BuildingPlayer.getContrubotorPlace(player.getName()));
                 }
 
                 return "-";

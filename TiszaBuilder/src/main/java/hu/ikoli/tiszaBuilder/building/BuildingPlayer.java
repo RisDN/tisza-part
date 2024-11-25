@@ -40,20 +40,6 @@ public class BuildingPlayer {
         }
     }
 
-    public static List<BuildingPlayer> getBuildingPlayers() {
-        return buildingPlayers;
-    }
-
-    public static BuildingPlayer getBuildingPlayer(Player player) {
-        for (BuildingPlayer buildingPlayer : buildingPlayers) {
-            if (buildingPlayer.getPlayer().getName().equals(player.getName())) {
-                return buildingPlayer;
-            }
-        }
-
-        return new BuildingPlayer(player);
-    }
-
     public Player getPlayer() {
         return player;
     }
@@ -82,6 +68,42 @@ public class BuildingPlayer {
 
     public static int getContributorsCount() {
         return playerData.getConfig().getConfigurationSection("players").getKeys(false).size();
+    }
+
+    public static List<BuildingPlayer> getBuildingPlayers() {
+        return buildingPlayers;
+    }
+
+    public static BuildingPlayer getBuildingPlayer(Player player) {
+        for (BuildingPlayer buildingPlayer : buildingPlayers) {
+            if (buildingPlayer.getPlayer().getName().equals(player.getName())) {
+                return buildingPlayer;
+            }
+        }
+
+        return new BuildingPlayer(player);
+    }
+
+    public static int getPlacedBlocksCount(String player) {
+        int sum = 0;
+        for (String block : playerData.getConfig().getStringList("players." + player + ".placed-blocks-type")) {
+            String[] blockData = block.split(":");
+            int blockCount = Integer.parseInt(blockData[1]);
+            sum += blockCount;
+        }
+
+        return sum;
+    }
+
+    public static int getContrubotorPlace(String player) {
+        int place = 0;
+        for (String p : playerData.getConfig().getConfigurationSection("players").getKeys(false)) {
+            if (getPlacedBlocksCount(p) > getPlacedBlocksCount(player)) {
+                place++;
+            }
+        }
+
+        return place + 1;
     }
 
 }
