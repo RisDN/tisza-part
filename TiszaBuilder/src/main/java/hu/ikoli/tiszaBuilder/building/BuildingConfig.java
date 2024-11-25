@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.type.Stairs.Shape;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -137,10 +138,13 @@ public abstract class BuildingConfig {
 
                     Location location = startingPosition.clone().add(relativeX, relativeY, relativeZ);
                     BlockFace blockFace = null;
+                    Shape blockShape = null;
 
                     for (Entry<Property<?>, Object> state : blockState.getStates().entrySet()) {
                         if (state.getKey().getName().equals("facing")) {
                             blockFace = BlockFace.valueOf(state.getValue().toString());
+                        } else if (state.getKey().getName().equals("shape")) {
+                            blockShape = Shape.valueOf(state.getValue().toString().toUpperCase());
                         }
                     }
 
@@ -156,7 +160,7 @@ public abstract class BuildingConfig {
                         blocksNeeded.put(material, 1);
                     }
 
-                    allBlocksNeeded.add(new SchemBlock(location, material, blockFace));
+                    allBlocksNeeded.add(new SchemBlock(location, material, blockFace, blockShape));
                 }
             }
         } catch (Exception e) {

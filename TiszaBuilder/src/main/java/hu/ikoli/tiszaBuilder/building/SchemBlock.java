@@ -1,18 +1,18 @@
 package hu.ikoli.tiszabuilder.building;
 
-import javax.annotation.Nullable;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.type.Stairs.Shape;
 
 public class SchemBlock {
 
     private Location location;
     private Material material;
     private BlockFace blockFace;
+    private Shape shape;
 
-    public SchemBlock(Location location, Material material, @Nullable BlockFace blockFace) {
+    public SchemBlock(Location location, Material material, BlockFace blockFace, Shape shape) {
 
         if (material.isAir()) {
             return;
@@ -21,7 +21,7 @@ public class SchemBlock {
         this.location = location;
         this.material = material;
         this.blockFace = blockFace;
-
+        this.shape = shape;
     }
 
     public Location getLocation() {
@@ -38,5 +38,9 @@ public class SchemBlock {
 
     public BlockFace getBlockFace() {
         return blockFace;
+    }
+
+    public Shape getShape() {
+        return shape;
     }
 }

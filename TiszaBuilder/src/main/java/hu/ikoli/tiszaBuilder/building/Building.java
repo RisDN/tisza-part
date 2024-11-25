@@ -12,6 +12,7 @@ import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.type.Stairs;
 import org.bukkit.inventory.ItemStack;
 
 import hu.ikoli.tiszabuilder.TiszaBuilder;
@@ -58,7 +59,7 @@ public class Building extends BuildingConfig {
         for (ItemStack item : inventory) {
             Material material = item.getType();
             int amount = item.getAmount();
-            if (items.containsKey(item)) {
+            if (items.containsKey(item.getType())) {
                 items.put(material, items.get(material) + amount);
             } else {
                 items.put(material, amount);
@@ -132,6 +133,11 @@ public class Building extends BuildingConfig {
                             if (blockState.getBlockData() instanceof Directional directional) {
                                 directional.setFacing(schemBlock.getBlockFace());
                                 blockState.setBlockData(directional);
+                                blockState.update(true);
+                            }
+                            if (blockState.getBlockData() instanceof Stairs stairs) {
+                                stairs.setShape(schemBlock.getShape());
+                                blockState.setBlockData(stairs);
                                 blockState.update(true);
                             }
 
