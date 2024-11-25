@@ -47,6 +47,8 @@ public class InventoryCloseListener implements Listener {
 
         }
 
+        building.saveInventory();
+
     }
 
 }

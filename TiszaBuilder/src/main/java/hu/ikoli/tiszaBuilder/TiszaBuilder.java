@@ -68,6 +68,7 @@ public class TiszaBuilder extends JavaPlugin {
 
 		for (Building building : Building.getBuildings()) {
 			building.stopBuildingTask();
+			building.saveInventory();
 		}
 
 		for (Player player : getServer().getOnlinePlayers()) {

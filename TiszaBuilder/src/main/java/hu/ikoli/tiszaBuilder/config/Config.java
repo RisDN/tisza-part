@@ -55,6 +55,7 @@ public class Config {
         setConfig("messages.reloaded", "%prefix% &aConfig újratöltve!");
 
         setConfig("settings.player-saving-interval", 30);
+        setConfig("settings.building-delay", 3);
 
         saveConfig();
     }

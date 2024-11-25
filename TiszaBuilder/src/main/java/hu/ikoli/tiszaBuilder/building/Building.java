@@ -1,7 +1,9 @@
 package hu.ikoli.tiszabuilder.building;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,10 +12,10 @@ import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.Directional;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import hu.ikoli.tiszabuilder.TiszaBuilder;
+import hu.ikoli.tiszabuilder.config.Config;
 
 public class Building extends BuildingConfig {
 
@@ -28,8 +30,46 @@ public class Building extends BuildingConfig {
     public Building(String fileName) {
         super(fileName);
 
+        if (getConfig().getConfigurationSection("inventory") == null) {
+            getConfig().createSection("inventory");
+            saveConfig();
+        }
+
+        for (String key : getConfig().getConfigurationSection("inventory").getKeys(false)) {
+            Material material = Material.getMaterial(key);
+            int amount = getConfig().getInt("inventory." + key);
+            ItemStack item = new ItemStack(material, amount);
+            inventory.add(item);
+            System.out.println("Added " + item.getType().toString() + " to inventory");
+        }
+
         startBuildingTask();
         buildings.add(this);
+    }
+
+    public void saveInventory() {
+
+        if (inventory.size() == 0) {
+            getConfig().set("inventory", null);
+            saveConfig();
+            return;
+        }
+        Map<Material, Integer> items = new HashMap<>();
+        for (ItemStack item : inventory) {
+            Material material = item.getType();
+            int amount = item.getAmount();
+            if (items.containsKey(item)) {
+                items.put(material, items.get(material) + amount);
+            } else {
+                items.put(material, amount);
+            }
+        }
+
+        for (Material material : items.keySet()) {
+            getConfig().set("inventory." + material.toString(), items.get(material));
+        }
+
+        saveConfig();
     }
 
     public void startBuildingTask() {
@@ -77,7 +117,7 @@ public class Building extends BuildingConfig {
 
         inventory.remove(item);
         for (int i = 0; i < item.getAmount(); i++) {
-            long delay = i * 5;
+            long delay = i * (long) Config.getDouble("settings.building-delay") * 20;
             Bukkit.getScheduler().runTaskLater(TiszaBuilder.getInstance(),
 
                     new Runnable() {
@@ -117,6 +157,7 @@ public class Building extends BuildingConfig {
             int z = schemBlock.getLocation().getBlockZ();
             if (x == location.getBlockX() && y == location.getBlockY() && z == location.getBlockZ()) {
                 getAllBlocksNeeded().remove(schemBlock);
+                saveInventory();
                 return;
             }
         }
