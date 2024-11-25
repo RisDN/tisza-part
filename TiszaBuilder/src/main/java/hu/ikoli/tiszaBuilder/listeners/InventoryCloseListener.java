@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 import hu.ikoli.tiszabuilder.building.Building;
+import hu.ikoli.tiszabuilder.building.BuildingPlayer;
 import hu.ikoli.tiszabuilder.building.ItemsAddingMenuHolder;
 
 public class InventoryCloseListener implements Listener {
@@ -37,6 +38,10 @@ public class InventoryCloseListener implements Listener {
                 player.getInventory().addItem(item);
                 continue;
             }
+
+            BuildingPlayer buildingPlayer = BuildingPlayer.getBuildingPlayer(player);
+
+            buildingPlayer.addPlacedBlock(item);
 
             building.addItem(item);
 

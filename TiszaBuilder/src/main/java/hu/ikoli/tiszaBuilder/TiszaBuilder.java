@@ -2,12 +2,18 @@ package hu.ikoli.tiszabuilder;
 
 import java.io.File;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import hu.ikoli.tiszabuilder.building.Building;
+import hu.ikoli.tiszabuilder.building.BuildingPlayer;
 import hu.ikoli.tiszabuilder.config.Config;
 import hu.ikoli.tiszabuilder.listeners.CommandListener;
 import hu.ikoli.tiszabuilder.listeners.InventoryCloseListener;
+import hu.ikoli.tiszabuilder.listeners.PlayerJoinListener;
+import hu.ikoli.tiszabuilder.listeners.PlayerQuitListener;
+import hu.ikoli.tiszabuilder.utils.FileManager;
 
 public class TiszaBuilder extends JavaPlugin {
 
@@ -15,6 +21,9 @@ public class TiszaBuilder extends JavaPlugin {
 	private static Config config;
 	private static PlaceholderManager placeholderManager;
 	private static File pluginDataFolder;
+	private static FileManager playerData;
+
+	private BukkitTask playerSavingTask;
 
 	public void onEnable() {
 		instance = this;
@@ -25,9 +34,13 @@ public class TiszaBuilder extends JavaPlugin {
 
 		getServer().getPluginManager().registerEvents(new InventoryCloseListener(), this);
 
+		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+
 		pluginDataFolder = getDataFolder();
 		config = new Config();
 		placeholderManager = new PlaceholderManager();
+		playerData = new FileManager("playerdata.yml");
 
 		File buildingFolder = new File(getDataFolder(), "buildings");
 		if (!buildingFolder.exists()) {
@@ -41,6 +54,12 @@ public class TiszaBuilder extends JavaPlugin {
 			}
 		}
 
+		for (Player player : getServer().getOnlinePlayers()) {
+			BuildingPlayer.getBuildingPlayer(player);
+		}
+
+		startPlayerSavingTask();
+
 		getLogger().info("Builder plugin has been enabled!");
 	}
 
@@ -51,7 +70,36 @@ public class TiszaBuilder extends JavaPlugin {
 			building.stopBuildingTask();
 		}
 
+		for (Player player : getServer().getOnlinePlayers()) {
+			BuildingPlayer p = BuildingPlayer.getBuildingPlayer(player);
+			p.save();
+		}
+
+		stopPlayerSavingTask();
+		BuildingPlayer.getBuildingPlayers().clear();
+
 		getLogger().info("Builder plugin has been disabled!");
+	}
+
+	public void startPlayerSavingTask() {
+		System.out.println("Starting player saving task");
+		playerSavingTask = getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+			for (BuildingPlayer player : BuildingPlayer.getBuildingPlayers()) {
+				player.save();
+			}
+		}, getConfig().getInt("settings.player-saving-interval", 5) * 20, getConfig().getInt("settings.player-saving-interval", 5) * 20);
+	}
+
+	public void stopPlayerSavingTask() {
+		if (playerSavingTask == null) {
+			return;
+		}
+
+		playerSavingTask.cancel();
+	}
+
+	public static FileManager getPlayerData() {
+		return playerData;
 	}
 
 	public static TiszaBuilder getInstance() {

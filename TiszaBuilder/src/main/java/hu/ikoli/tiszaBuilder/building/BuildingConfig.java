@@ -141,6 +141,10 @@ public abstract class BuildingConfig {
                         if (state.getKey().getName().equals("facing")) {
                             blockFace = BlockFace.valueOf(state.getValue().toString());
                         }
+                        if (blockState.getBlockType().getName().contains("sta")) {
+                            System.out.println(state.getKey().getName() + " = " + state.getValue());
+                        }
+
                     }
 
                     Material material = BukkitAdapter.adapt(blockState.getBlockType());

@@ -54,6 +54,8 @@ public class Config {
         setConfig("messages.no-permission", "%prefix% &cNincs jogosultságod ehhez!");
         setConfig("messages.reloaded", "%prefix% &aConfig újratöltve!");
 
+        setConfig("settings.player-saving-interval", 30);
+
         saveConfig();
     }
 
