@@ -82,7 +82,6 @@ public class TiszaBuilder extends JavaPlugin {
 	}
 
 	public void startPlayerSavingTask() {
-		System.out.println("Starting player saving task");
 		playerSavingTask = getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
 			for (BuildingPlayer player : BuildingPlayer.getBuildingPlayers()) {
 				player.save();
