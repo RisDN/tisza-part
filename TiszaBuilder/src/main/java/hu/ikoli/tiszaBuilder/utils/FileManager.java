@@ -53,7 +53,7 @@ public class FileManager {
         try {
             this.getConfig().save(this.configFile);
         } catch (IOException e) {
-            Utils.log("Nem menthető config ide: " + this.configFile.getName());
+            throw new RuntimeException("Could not save config to " + this.configFile, e);
         }
     }
 
