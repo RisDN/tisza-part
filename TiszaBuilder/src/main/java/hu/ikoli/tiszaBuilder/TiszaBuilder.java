@@ -13,6 +13,7 @@ import hu.ikoli.tiszabuilder.listeners.CommandListener;
 import hu.ikoli.tiszabuilder.listeners.InventoryCloseListener;
 import hu.ikoli.tiszabuilder.listeners.PlayerJoinListener;
 import hu.ikoli.tiszabuilder.listeners.PlayerQuitListener;
+import hu.ikoli.tiszabuilder.redis.JedisConnection;
 import hu.ikoli.tiszabuilder.utils.FileManager;
 
 public class TiszaBuilder extends JavaPlugin {
@@ -22,6 +23,7 @@ public class TiszaBuilder extends JavaPlugin {
 	private static PlaceholderManager placeholderManager;
 	private static File pluginDataFolder;
 	private static FileManager playerData;
+	private static JedisConnection jedisConnection;
 
 	private BukkitTask playerSavingTask;
 
@@ -41,6 +43,7 @@ public class TiszaBuilder extends JavaPlugin {
 		config = new Config();
 		placeholderManager = new PlaceholderManager();
 		playerData = new FileManager("playerdata.yml");
+		jedisConnection = new JedisConnection();
 
 		File buildingFolder = new File(getDataFolder(), "buildings");
 		if (!buildingFolder.exists()) {

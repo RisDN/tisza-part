@@ -57,6 +57,10 @@ public class Config {
         setConfig("settings.player-saving-interval", 30);
         setConfig("settings.building-delay", 3);
 
+        setConfig("settings.redis.channel-name", "tiszabuilder");
+        setConfig("settings.redis.host", "redis");
+        setConfig("settings.redis.port", 6379);
+
         saveConfig();
     }
 
