@@ -50,6 +50,7 @@ public class Config {
         }
 
         setConfig("prefix", "&8[&eTiszaBuilder&8] »");
+        setConfig("server-type", "building");
 
         setConfig("messages.no-permission", "%prefix% &cNincs jogosultságod ehhez!");
         setConfig("messages.reloaded", "%prefix% &aConfig újratöltve!");
@@ -62,6 +63,10 @@ public class Config {
         setConfig("settings.redis.port", 6379);
 
         saveConfig();
+    }
+
+    public static ServerType getServerType() {
+        return ServerType.valueOf(config.getString("server-type").toUpperCase());
     }
 
     public static void reloadConfig() {
