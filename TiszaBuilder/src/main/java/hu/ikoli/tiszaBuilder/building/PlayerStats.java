@@ -11,61 +11,64 @@ public class PlayerStats {
 
     private String player;
 
-    private String building_displayname;
-    private String building_filename;
-    private double building_progress;
-    private int building_blocks_needed;
-    private int building_blocks_placed;
-    private int building_contributors;
+    private static String building_displayname;
+    private static String building_filename;
+    private static double building_progress;
+    private static int building_blocks_needed;
+    private static int building_blocks_placed;
+    private static int building_contributors;
     private int player_blocks_placed;
     private double player_blocks_placed_progress;
     private int player_contrubution_place;
 
     public PlayerStats(String player) {
         this.player = player;
-        this.fetch();
     }
 
-    public void fetch() {
+    public static void fetch() {
         Bukkit.getScheduler().runTaskAsynchronously(TiszaBuilder.getInstance(),
 
                 new Runnable() {
                     @Override
                     public void run() {
-                        building_displayname = jedisConnection.get(player + "." + "building_displayname");
-                        building_filename = jedisConnection.get(player + "." + "building_filename");
-                        building_progress = Double.parseDouble(jedisConnection.get(player + "." + "building_progress"));
-                        building_blocks_needed = Integer.parseInt(jedisConnection.get(player + "." + "building_blocks_needed"));
-                        building_blocks_placed = Integer.parseInt(jedisConnection.get(player + "." + "building_blocks_placed"));
-                        building_contributors = Integer.parseInt(jedisConnection.get(player + "." + "building_contributors"));
-                        player_blocks_placed = Integer.parseInt(jedisConnection.get(player + "." + "player_blocks_placed"));
-                        player_blocks_placed_progress = Double.parseDouble(jedisConnection.get(player + "." + "player_blocks_placed_progress"));
-                        player_contrubution_place = Integer.parseInt(jedisConnection.get(player + "." + "player_contrubution_place"));
+
+                        building_displayname = jedisConnection.get("building_displayname");
+                        building_filename = jedisConnection.get("building_filename");
+                        building_progress = Double.parseDouble(jedisConnection.get("building_progress"));
+                        building_blocks_needed = Integer.parseInt(jedisConnection.get("building_blocks_needed"));
+                        building_blocks_placed = Integer.parseInt(jedisConnection.get("building_blocks_placed"));
+                        building_contributors = Integer.parseInt(jedisConnection.get("building_contributors"));
+
+                        for (BuildingPlayer player : BuildingPlayer.getBuildingPlayers()) {
+                            player.getPlayerStats().player_blocks_placed = Integer.parseInt(jedisConnection.get(player + "." + "player_blocks_placed"));
+                            player.getPlayerStats().player_blocks_placed_progress = Double.parseDouble(jedisConnection.get(player + "." + "player_blocks_placed_progress"));
+                            player.getPlayerStats().player_contrubution_place = Integer.parseInt(jedisConnection.get(player + "." + "player_contrubution_place"));
+                        }
                     }
                 });
     }
 
-    public String getBuilding_displayname() {
+    public static String getBuilding_displayname() {
         return building_displayname;
     }
 
-    public String getBuilding_filename() {
+    public static String getBuilding_filename() {
         return building_filename;
     }
 
-    public double getBuilding_progress() {
+    public static double getBuilding_progress() {
         return building_progress;
     }
 
-    public int getBuilding_blocks_needed() {
+    public static int getBuilding_blocks_needed() {
         return building_blocks_needed;
     }
 
-    public int getBuilding_blocks_placed() {
+    public static int getBuilding_blocks_placed() {
         return building_blocks_placed;
     }
 
-    public int getBuilding_contributors() {
+    public static int getBuilding_contributors() {
         return building_contributors;
     }
 

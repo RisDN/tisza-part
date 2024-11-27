@@ -62,27 +62,27 @@ public class PlaceholderManager {
                     }
 
                     if (identifier.equalsIgnoreCase("building_displayname")) {
-                        return stats.getBuilding_displayname();
+                        return PlayerStats.getBuilding_displayname();
                     }
 
                     if (identifier.equalsIgnoreCase("building_filename")) {
-                        return stats.getBuilding_filename();
+                        return PlayerStats.getBuilding_filename();
                     }
 
                     if (identifier.equalsIgnoreCase("building_progress")) {
-                        return String.valueOf(Utils.round(stats.getBuilding_progress(), 2));
+                        return String.valueOf(Utils.round(PlayerStats.getBuilding_progress(), 2));
                     }
 
                     if (identifier.equalsIgnoreCase("building_blocks_needed")) {
-                        return String.valueOf(stats.getBuilding_blocks_needed());
+                        return String.valueOf(PlayerStats.getBuilding_blocks_needed());
                     }
 
                     if (identifier.equalsIgnoreCase("building_blocks_placed")) {
-                        return String.valueOf(stats.getBuilding_blocks_placed());
+                        return String.valueOf(PlayerStats.getBuilding_blocks_placed());
                     }
 
                     if (identifier.equalsIgnoreCase("building_contributors")) {
-                        return String.valueOf(stats.getBuilding_contributors());
+                        return String.valueOf(PlayerStats.getBuilding_contributors());
                     }
 
                     if (identifier.equalsIgnoreCase("player_blocks_placed")) {

@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import hu.ikoli.tiszabuilder.building.Building;
 import hu.ikoli.tiszabuilder.building.BuildingPlayer;
+import hu.ikoli.tiszabuilder.building.PlayerStats;
 import hu.ikoli.tiszabuilder.config.Config;
 import hu.ikoli.tiszabuilder.config.ServerType;
 import hu.ikoli.tiszabuilder.listeners.CommandListener;
@@ -77,14 +78,16 @@ public class TiszaBuilder extends JavaPlugin {
 	public void startRedisSyncTask() {
 		getLogger().info("Starting redis sync task...");
 		int syncInterval = Config.getInt("settings.redis.sync-interval");
+
 		if (Config.getServerType().equals(ServerType.GATHERING)) {
 			redisFetchTask = getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
-				for (BuildingPlayer player : BuildingPlayer.getBuildingPlayers()) {
-					player.getPlayerStats().fetch();
-				}
+
+				PlayerStats.fetch();
 
 			}, syncInterval * 20, syncInterval * 20);
-		} else {
+		}
+
+		if (Config.getServerType().equals(ServerType.BUILDING)) {
 
 			redisSyncTask = getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
 				Building building = Building.getBuildings().get(0);

@@ -62,14 +62,16 @@ public class Building extends BuildingConfig {
                 new Runnable() {
                     @Override
                     public void run() {
+
+                        jedis.set("building_displayname", getDisplayname());
+                        jedis.set("building_filename", getFileName());
+                        jedis.set("building_progress", String.valueOf(getProgress()));
+                        jedis.set("building_blocks_needed", String.valueOf(getAllBlocksRequiredCount()));
+                        jedis.set("building_blocks_placed", String.valueOf(getPlacedBlocksCount()));
+                        jedis.set("building_contributors", String.valueOf(BuildingPlayer.getContributorsCount()));
+
                         for (BuildingPlayer buildingPlayer : BuildingPlayer.getBuildingPlayers()) {
                             String node = buildingPlayer.getPlayer().getName() + ".";
-                            jedis.set(node + "building_displayname", getDisplayname());
-                            jedis.set(node + "building_filename", getFileName());
-                            jedis.set(node + "building_progress", String.valueOf(getProgress(buildingPlayer)));
-                            jedis.set(node + "building_blocks_needed", String.valueOf(getAllBlocksRequiredCount()));
-                            jedis.set(node + "building_blocks_placed", String.valueOf(getPlacedBlocksCount()));
-                            jedis.set(node + "building_contributors", String.valueOf(BuildingPlayer.getContributorsCount()));
                             jedis.set(node + "player_blocks_placed", String.valueOf(buildingPlayer.getBlocksPlaced()));
                             jedis.set(node + "player_blocks_placed_progress", String.valueOf(getProgress(buildingPlayer)));
                             jedis.set(node + "player_contrubution_place", String.valueOf(BuildingPlayer.getContrubotorPlace(buildingPlayer.getPlayer().getName())));

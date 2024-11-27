@@ -40,6 +40,11 @@ public class BuildingPlayer {
         buildingPlayers.add(this);
     }
 
+    @Override
+    public String toString() {
+        return player.getName();
+    }
+
     public PlayerStats getPlayerStats() {
         return playerStats;
     }
