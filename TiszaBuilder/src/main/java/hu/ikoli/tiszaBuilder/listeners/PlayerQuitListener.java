@@ -13,7 +13,6 @@ public class PlayerQuitListener implements Listener {
         BuildingPlayer player = BuildingPlayer.getBuildingPlayer(event.getPlayer());
 
         player.save();
-
     }
 
 }

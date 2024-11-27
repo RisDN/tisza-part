@@ -17,9 +17,12 @@ import org.bukkit.inventory.ItemStack;
 
 import hu.ikoli.tiszabuilder.TiszaBuilder;
 import hu.ikoli.tiszabuilder.config.Config;
+import hu.ikoli.tiszabuilder.config.ServerType;
+import redis.clients.jedis.Jedis;
 
 public class Building extends BuildingConfig {
 
+    private static final Jedis jedis = TiszaBuilder.getJedisConnection().getJedis();
     private static List<Building> buildings = new ArrayList<>();
 
     private List<ItemStack> inventory = new ArrayList<>();
@@ -46,6 +49,33 @@ public class Building extends BuildingConfig {
 
         startBuildingTask();
         buildings.add(this);
+    }
+
+    public void syncStatsToRedis() {
+
+        if (!Config.getServerType().equals(ServerType.BUILDING)) {
+            return;
+        }
+
+        Bukkit.getScheduler().runTaskAsynchronously(TiszaBuilder.getInstance(),
+
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        for (BuildingPlayer buildingPlayer : BuildingPlayer.getBuildingPlayers()) {
+                            String node = buildingPlayer.getPlayer().getName() + ".";
+                            jedis.set(node + "building_displayname", getDisplayname());
+                            jedis.set(node + "building_filename", getFileName());
+                            jedis.set(node + "building_progress", String.valueOf(getProgress(buildingPlayer)));
+                            jedis.set(node + "building_blocks_needed", String.valueOf(getAllBlocksRequiredCount()));
+                            jedis.set(node + "building_blocks_placed", String.valueOf(getPlacedBlocksCount()));
+                            jedis.set(node + "building_contributors", String.valueOf(BuildingPlayer.getContributorsCount()));
+                            jedis.set(node + "player_blocks_placed", String.valueOf(buildingPlayer.getBlocksPlaced()));
+                            jedis.set(node + "player_blocks_placed_progress", String.valueOf(getProgress(buildingPlayer)));
+                            jedis.set(node + "player_contrubution_place", String.valueOf(BuildingPlayer.getContrubotorPlace(buildingPlayer.getPlayer().getName())));
+                        }
+                    }
+                });
     }
 
     public void saveInventory() {

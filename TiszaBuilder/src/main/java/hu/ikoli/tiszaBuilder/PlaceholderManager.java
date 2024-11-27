@@ -5,7 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 import hu.ikoli.tiszabuilder.building.Building;
 import hu.ikoli.tiszabuilder.building.BuildingPlayer;
+import hu.ikoli.tiszabuilder.building.PlayerStats;
 import hu.ikoli.tiszabuilder.config.Config;
+import hu.ikoli.tiszabuilder.config.ServerType;
 import hu.ikoli.tiszabuilder.utils.Utils;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
@@ -48,48 +50,100 @@ public class PlaceholderManager {
                     return Config.getPrefix();
                 }
 
-                Building building = Building.getBuildings().get(0);
+                boolean isBuildingServer = Config.getServerType().equals(ServerType.BUILDING);
 
-                if (building == null) {
-                    return "???";
+                if (!isBuildingServer) {
+
+                    BuildingPlayer buildingPlayer = BuildingPlayer.getBuildingPlayer(player);
+                    PlayerStats stats = buildingPlayer.getPlayerStats();
+
+                    if (stats == null) {
+                        return "???";
+                    }
+
+                    if (identifier.equalsIgnoreCase("building_displayname")) {
+                        return stats.getBuilding_displayname();
+                    }
+
+                    if (identifier.equalsIgnoreCase("building_filename")) {
+                        return stats.getBuilding_filename();
+                    }
+
+                    if (identifier.equalsIgnoreCase("building_progress")) {
+                        return String.valueOf(Utils.round(stats.getBuilding_progress(), 2));
+                    }
+
+                    if (identifier.equalsIgnoreCase("building_blocks_needed")) {
+                        return String.valueOf(stats.getBuilding_blocks_needed());
+                    }
+
+                    if (identifier.equalsIgnoreCase("building_blocks_placed")) {
+                        return String.valueOf(stats.getBuilding_blocks_placed());
+                    }
+
+                    if (identifier.equalsIgnoreCase("building_contributors")) {
+                        return String.valueOf(stats.getBuilding_contributors());
+                    }
+
+                    if (identifier.equalsIgnoreCase("player_blocks_placed")) {
+                        return String.valueOf(stats.getPlayer_blocks_placed());
+                    }
+
+                    if (identifier.equalsIgnoreCase("player_blocks_placed_progress")) {
+                        return String.valueOf(Utils.round(stats.getPlayer_blocks_placed_progress(), 2));
+                    }
+
+                    if (identifier.equalsIgnoreCase("player_contrubution_place")) {
+                        return String.valueOf(stats.getPlayer_contrubution_place());
+                    }
+
+                    return "-";
                 }
 
-                BuildingPlayer buildingPlayer = BuildingPlayer.getBuildingPlayer(player);
+                if (isBuildingServer) {
+                    Building building = Building.getBuildings().get(0);
 
-                if (identifier.equalsIgnoreCase("building_displayname")) {
-                    return building.getDisplayname();
-                }
+                    if (building == null) {
+                        return "???";
+                    }
 
-                if (identifier.equalsIgnoreCase("building_filename")) {
-                    return building.getFileName();
-                }
+                    BuildingPlayer buildingPlayer = BuildingPlayer.getBuildingPlayer(player);
 
-                if (identifier.equalsIgnoreCase("building_progress")) {
-                    return String.valueOf(Utils.round(building.getProgress(), 2));
-                }
+                    if (identifier.equalsIgnoreCase("building_displayname")) {
+                        return building.getDisplayname();
+                    }
 
-                if (identifier.equalsIgnoreCase("building_blocks_needed")) {
-                    return String.valueOf(building.getAllBlocksRequiredCount());
-                }
+                    if (identifier.equalsIgnoreCase("building_filename")) {
+                        return building.getFileName();
+                    }
 
-                if (identifier.equalsIgnoreCase("building_blocks_placed")) {
-                    return String.valueOf(building.getPlacedBlocksCount());
-                }
+                    if (identifier.equalsIgnoreCase("building_progress")) {
+                        return String.valueOf(Utils.round(building.getProgress(), 2));
+                    }
 
-                if (identifier.equalsIgnoreCase("building_contributors")) {
-                    return String.valueOf(BuildingPlayer.getContributorsCount());
-                }
+                    if (identifier.equalsIgnoreCase("building_blocks_needed")) {
+                        return String.valueOf(building.getAllBlocksRequiredCount());
+                    }
 
-                if (identifier.equalsIgnoreCase("player_blocks_placed")) {
-                    return String.valueOf(buildingPlayer.getBlocksPlaced());
-                }
+                    if (identifier.equalsIgnoreCase("building_blocks_placed")) {
+                        return String.valueOf(building.getPlacedBlocksCount());
+                    }
 
-                if (identifier.equalsIgnoreCase("player_blocks_placed_progress")) {
-                    return String.valueOf(Utils.round(building.getProgress(buildingPlayer), 2));
-                }
+                    if (identifier.equalsIgnoreCase("building_contributors")) {
+                        return String.valueOf(BuildingPlayer.getContributorsCount());
+                    }
 
-                if (identifier.equalsIgnoreCase("player_contrubution_place")) {
-                    return String.valueOf(BuildingPlayer.getContrubotorPlace(player.getName()));
+                    if (identifier.equalsIgnoreCase("player_blocks_placed")) {
+                        return String.valueOf(buildingPlayer.getBlocksPlaced());
+                    }
+
+                    if (identifier.equalsIgnoreCase("player_blocks_placed_progress")) {
+                        return String.valueOf(Utils.round(building.getProgress(buildingPlayer), 2));
+                    }
+
+                    if (identifier.equalsIgnoreCase("player_contrubution_place")) {
+                        return String.valueOf(BuildingPlayer.getContrubotorPlace(player.getName()));
+                    }
                 }
 
                 return "-";

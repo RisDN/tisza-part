@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitTask;
 import hu.ikoli.tiszabuilder.building.Building;
 import hu.ikoli.tiszabuilder.building.BuildingPlayer;
 import hu.ikoli.tiszabuilder.config.Config;
+import hu.ikoli.tiszabuilder.config.ServerType;
 import hu.ikoli.tiszabuilder.listeners.CommandListener;
 import hu.ikoli.tiszabuilder.listeners.InventoryCloseListener;
 import hu.ikoli.tiszabuilder.listeners.PlayerJoinListener;
@@ -26,6 +27,8 @@ public class TiszaBuilder extends JavaPlugin {
 	private static JedisConnection jedisConnection;
 
 	private BukkitTask playerSavingTask;
+	private BukkitTask redisFetchTask;
+	private BukkitTask redisSyncTask;
 
 	public void onEnable() {
 		instance = this;
@@ -51,9 +54,11 @@ public class TiszaBuilder extends JavaPlugin {
 			return;
 		}
 
-		for (File file : buildingFolder.listFiles()) {
-			if (file.getName().endsWith(".yml")) {
-				new Building(file.getName().replace(".yml", ""));
+		if (Config.getServerType().equals(ServerType.BUILDING)) {
+			for (File file : buildingFolder.listFiles()) {
+				if (file.getName().endsWith(".yml")) {
+					new Building(file.getName().replace(".yml", ""));
+				}
 			}
 		}
 
@@ -63,7 +68,45 @@ public class TiszaBuilder extends JavaPlugin {
 
 		startPlayerSavingTask();
 
+		startRedisSyncTask();
+
 		getLogger().info("Builder plugin has been enabled!");
+		getLogger().info("Server type: " + Config.getServerType().name());
+	}
+
+	public void startRedisSyncTask() {
+		getLogger().info("Starting redis sync task...");
+		int syncInterval = Config.getInt("settings.redis.sync-interval");
+		if (Config.getServerType().equals(ServerType.GATHERING)) {
+			redisFetchTask = getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+				for (BuildingPlayer player : BuildingPlayer.getBuildingPlayers()) {
+					player.getPlayerStats().fetch();
+				}
+
+			}, syncInterval * 20, syncInterval * 20);
+		} else {
+
+			redisSyncTask = getServer().getScheduler().runTaskTimerAsynchronously(this, () -> {
+				Building building = Building.getBuildings().get(0);
+				building.syncStatsToRedis();
+			}, syncInterval * 20, syncInterval * 20);
+
+		}
+
+	}
+
+	public void stopRedisSyncTask() {
+
+		if (redisFetchTask != null) {
+			redisFetchTask.cancel();
+			return;
+		}
+
+		if (redisSyncTask != null) {
+			redisSyncTask.cancel();
+			return;
+		}
+
 	}
 
 	public void onDisable() {
@@ -80,6 +123,7 @@ public class TiszaBuilder extends JavaPlugin {
 		}
 
 		stopPlayerSavingTask();
+		stopRedisSyncTask();
 		BuildingPlayer.getBuildingPlayers().clear();
 
 		getLogger().info("Builder plugin has been disabled!");

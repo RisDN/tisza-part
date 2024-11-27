@@ -1,5 +1,7 @@
 package hu.ikoli.tiszabuilder.redis;
 
+import org.bukkit.Bukkit;
+
 import hu.ikoli.tiszabuilder.config.Config;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
@@ -14,10 +16,18 @@ public class JedisConnection {
         this.channelName = Config.getString("settings.redis.channel-name");
         this.jedis = new Jedis(Config.getString("settings.redis.host"), Config.getInt("settings.redis.port"));
 
-        new Thread(() -> {
-            jedis.subscribe(new JedisListener(), channelName);
-        }).start();
+        this.jedis.auth(Config.getString("settings.redis.user"), Config.getString("settings.redis.password"));
 
+        if (this.jedis.isConnected()) {
+            Bukkit.getLogger().info("Redis kapcsolat létrehozva.");
+        } else {
+            Bukkit.getLogger().severe("Nem sikerült létrehozni a Redis kapcsolatot.");
+        }
+
+    }
+
+    public Jedis getJedis() {
+        return jedis;
     }
 
     public void sendMessage(String message) {

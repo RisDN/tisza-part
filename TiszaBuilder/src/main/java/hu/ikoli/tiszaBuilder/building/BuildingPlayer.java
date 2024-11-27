@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import hu.ikoli.tiszabuilder.TiszaBuilder;
+import hu.ikoli.tiszabuilder.config.Config;
 import hu.ikoli.tiszabuilder.utils.FileManager;
 
 public class BuildingPlayer {
@@ -18,17 +19,29 @@ public class BuildingPlayer {
 
     private Player player;
 
+    private PlayerStats playerStats;
+
     private Map<String, Integer> placedBuildingBlocks = new HashMap<String, Integer>();
 
     public BuildingPlayer(Player player) {
         this.player = player;
-        String node = "players." + player.getName() + ".";
 
-        for (String blocks : playerData.getConfig().getStringList(node + "placed-blocks-type")) {
-            String[] block = blocks.split(":");
-            placedBuildingBlocks.put(block[0], Integer.parseInt(block[1]));
+        if (Config.isBuildingServer()) {
+            String node = "players." + player.getName() + ".";
+
+            for (String blocks : playerData.getConfig().getStringList(node + "placed-blocks-type")) {
+                String[] block = blocks.split(":");
+                placedBuildingBlocks.put(block[0], Integer.parseInt(block[1]));
+            }
+        } else {
+            playerStats = new PlayerStats(player.getName());
         }
+
         buildingPlayers.add(this);
+    }
+
+    public PlayerStats getPlayerStats() {
+        return playerStats;
     }
 
     public void addPlacedBlock(ItemStack item) {

@@ -1,5 +1,9 @@
 package hu.ikoli.tiszabuilder.listeners;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,6 +32,8 @@ public class InventoryCloseListener implements Listener {
         Building building = Building.getBuildings().get(0);
         Player player = (Player) event.getPlayer();
 
+        List<Material> alreadyCompleted = new ArrayList<>();
+
         for (ItemStack item : items) {
             if (item == null) {
                 continue;
@@ -39,6 +45,16 @@ public class InventoryCloseListener implements Listener {
                 continue;
             }
 
+            if (building.getNextBlock(item.getType()) == null && !alreadyCompleted.contains(item.getType())) {
+                alreadyCompleted.add(item.getType());
+                player.getInventory().addItem(item);
+                continue;
+            }
+
+            if (building.getNextBlock(item.getType()) == null) {
+                continue;
+            }
+
             BuildingPlayer buildingPlayer = BuildingPlayer.getBuildingPlayer(player);
 
             buildingPlayer.addPlacedBlock(item);
@@ -47,7 +63,12 @@ public class InventoryCloseListener implements Listener {
 
         }
 
+        for (Material material : alreadyCompleted) {
+            player.sendMessage("Erre már nincs szükség: " + material);
+        }
+
         building.saveInventory();
+        building.syncStatsToRedis();
 
     }
 

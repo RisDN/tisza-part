@@ -61,12 +61,19 @@ public class Config {
         setConfig("settings.redis.channel-name", "tiszabuilder");
         setConfig("settings.redis.host", "redis");
         setConfig("settings.redis.port", 6379);
+        setConfig("settings.redis.user", "default");
+        setConfig("settings.redis.password", "password");
+        setConfig("settings.redis.sync-interval", 5);
 
         saveConfig();
     }
 
     public static ServerType getServerType() {
         return ServerType.valueOf(config.getString("server-type").toUpperCase());
+    }
+
+    public static boolean isBuildingServer() {
+        return getServerType().equals(ServerType.BUILDING);
     }
 
     public static void reloadConfig() {

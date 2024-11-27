@@ -22,7 +22,7 @@ public class CommandListener implements CommandExecutor, Listener {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("additems")) {
+        if (args[0].equalsIgnoreCase("additems") && Config.isBuildingServer()) {
             ItemAdding.openItemAddingMenu(player);
             return true;
         }
@@ -30,6 +30,11 @@ public class CommandListener implements CommandExecutor, Listener {
         if (player.hasPermission("tiszabuilder.admin")) {
             if (args.length == 0) {
                 player.sendMessage("§cUsage: /tiszabuilder <reload | show>");
+                return true;
+            }
+
+            if (args[0].equalsIgnoreCase("servertype")) {
+                player.sendMessage("§aA szerver típusa: " + Config.getServerType().name());
                 return true;
             }
 
