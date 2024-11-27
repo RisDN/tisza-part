@@ -101,6 +101,10 @@ public class TiszaBuilder extends JavaPlugin {
 		playerSavingTask.cancel();
 	}
 
+	public static JedisConnection getJedisConnection() {
+		return jedisConnection;
+	}
+
 	public static FileManager getPlayerData() {
 		return playerData;
 	}
