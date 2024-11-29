@@ -9,7 +9,7 @@ public class PlayerStats {
 
     private static final Jedis jedisConnection = TiszaBuilder.getJedisConnection().getJedis();
 
-    private String player;
+    private String playrName;
 
     private static String building_displayname;
     private static String building_filename;
@@ -22,30 +22,28 @@ public class PlayerStats {
     private int player_contrubution_place;
 
     public PlayerStats(String player) {
-        this.player = player;
+        this.playrName = player;
     }
 
     public static void fetch() {
-        Bukkit.getScheduler().runTaskAsynchronously(TiszaBuilder.getInstance(),
+        Bukkit.getScheduler().runTaskAsynchronously(TiszaBuilder.getInstance(), new Runnable() {
+            @Override
+            public void run() {
 
-                new Runnable() {
-                    @Override
-                    public void run() {
+                building_displayname = jedisConnection.get("building_displayname");
+                building_filename = jedisConnection.get("building_filename");
+                building_progress = Double.parseDouble(jedisConnection.get("building_progress"));
+                building_blocks_needed = Integer.parseInt(jedisConnection.get("building_blocks_needed"));
+                building_blocks_placed = Integer.parseInt(jedisConnection.get("building_blocks_placed"));
+                building_contributors = Integer.parseInt(jedisConnection.get("building_contributors"));
 
-                        building_displayname = jedisConnection.get("building_displayname");
-                        building_filename = jedisConnection.get("building_filename");
-                        building_progress = Double.parseDouble(jedisConnection.get("building_progress"));
-                        building_blocks_needed = Integer.parseInt(jedisConnection.get("building_blocks_needed"));
-                        building_blocks_placed = Integer.parseInt(jedisConnection.get("building_blocks_placed"));
-                        building_contributors = Integer.parseInt(jedisConnection.get("building_contributors"));
-
-                        for (BuildingPlayer player : BuildingPlayer.getBuildingPlayers()) {
-                            player.getPlayerStats().player_blocks_placed = Integer.parseInt(jedisConnection.get(player + "." + "player_blocks_placed"));
-                            player.getPlayerStats().player_blocks_placed_progress = Double.parseDouble(jedisConnection.get(player + "." + "player_blocks_placed_progress"));
-                            player.getPlayerStats().player_contrubution_place = Integer.parseInt(jedisConnection.get(player + "." + "player_contrubution_place"));
-                        }
-                    }
-                });
+                for (BuildingPlayer player : BuildingPlayer.getBuildingPlayers()) {
+                    player.getPlayerStats().player_blocks_placed = Integer.parseInt(jedisConnection.get(player + "." + "player_blocks_placed"));
+                    player.getPlayerStats().player_blocks_placed_progress = Double.parseDouble(jedisConnection.get(player + "." + "player_blocks_placed_progress"));
+                    player.getPlayerStats().player_contrubution_place = Integer.parseInt(jedisConnection.get(player + "." + "player_contrubution_place"));
+                }
+            }
+        });
     }
 
     public static String getBuilding_displayname() {
@@ -82,6 +80,10 @@ public class PlayerStats {
 
     public int getPlayer_contrubution_place() {
         return player_contrubution_place;
+    }
+
+    public String getPlayrName() {
+        return playrName;
     }
 
 }

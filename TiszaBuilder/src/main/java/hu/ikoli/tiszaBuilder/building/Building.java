@@ -232,6 +232,14 @@ public class Building extends BuildingConfig {
         return buildings;
     }
 
+    public static List<String> getBuildingNames() {
+        List<String> names = new ArrayList<>();
+        for (Building building : buildings) {
+            names.add(building.getFileName());
+        }
+        return new ArrayList<>(names);
+    }
+
     public static Building getBuilding(String fileName) {
         for (Building building : buildings) {
             if (building.getFileName().equals(fileName)) {
