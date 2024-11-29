@@ -38,9 +38,14 @@ public class PlayerStats {
                 building_contributors = Integer.parseInt(jedisConnection.get("building_contributors"));
 
                 for (BuildingPlayer player : BuildingPlayer.getBuildingPlayers()) {
-                    player.getPlayerStats().player_blocks_placed = Integer.parseInt(jedisConnection.get(player + "." + "player_blocks_placed"));
-                    player.getPlayerStats().player_blocks_placed_progress = Double.parseDouble(jedisConnection.get(player + "." + "player_blocks_placed_progress"));
-                    player.getPlayerStats().player_contrubution_place = Integer.parseInt(jedisConnection.get(player + "." + "player_contrubution_place"));
+                    String blocksPlaced = jedisConnection.get(player + "." + "player_blocks_placed");
+                    player.getPlayerStats().player_blocks_placed = "nil".equals(blocksPlaced) ? 0 : Integer.parseInt(blocksPlaced);
+
+                    String blocksPlacedProgress = jedisConnection.get(player + "." + "player_blocks_placed_progress");
+                    player.getPlayerStats().player_blocks_placed_progress = "nil".equals(blocksPlacedProgress) ? 0.0 : Double.parseDouble(blocksPlacedProgress);
+
+                    String contributionPlace = jedisConnection.get(player + "." + "player_contrubution_place");
+                    player.getPlayerStats().player_contrubution_place = "nil".equals(contributionPlace) ? 0 : Integer.parseInt(contributionPlace);
                 }
             }
         });
