@@ -6,5 +6,5 @@ author: ikoli, Ris
 soft-depend: [PlaceholderAPI]
 
 commands:
-  builder:
-    aliases: [b]
+  tiszabuilder:
+    aliases: [b, builder]
