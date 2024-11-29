@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import hu.ikoli.tiszabuilder.building.Building;
 import hu.ikoli.tiszabuilder.building.BuildingPlayer;
 import hu.ikoli.tiszabuilder.building.ItemsAddingMenuHolder;
+import hu.ikoli.tiszabuilder.config.Config;
 
 public class InventoryCloseListener implements Listener {
 
@@ -40,7 +41,7 @@ public class InventoryCloseListener implements Listener {
             }
 
             if (!building.isBlockNeeded(item.getType())) {
-                player.sendMessage("This block is not needed for this building!" + item.getType());
+                player.sendMessage(Config.getMessage("block-not-needed").replace("%block%", item.getType().toString()));
                 player.getInventory().addItem(item);
                 continue;
             }
@@ -64,7 +65,7 @@ public class InventoryCloseListener implements Listener {
         }
 
         for (Material material : alreadyCompleted) {
-            player.sendMessage("Erre már nincs szükség: " + material);
+            player.sendMessage(Config.getMessage("block-no-longer-needed").replace("%block%", material.toString()));
         }
 
         building.saveInventory();

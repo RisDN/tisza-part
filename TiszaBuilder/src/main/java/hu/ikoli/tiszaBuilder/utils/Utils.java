@@ -29,6 +29,10 @@ public class Utils {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
+    public static boolean isPositiveInteger(String str) {
+        return str != null && str.matches("[1-9][0-9]*"); // regex for natural numbers (positive integers)
+    }
+
     public static double round(double value, int places) {
         if (places < 0)
             throw new IllegalArgumentException();
