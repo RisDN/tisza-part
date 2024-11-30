@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,6 +24,8 @@ public class Building extends BuildingConfig {
     private static final Jedis jedis = TiszaBuilder.getJedisConnection().getJedis();
     private static List<Building> buildings = new ArrayList<>();
 
+    private Map<Material, Integer> placedBlocks = new HashMap<Material, Integer>();
+
     private List<ItemStack> inventory = new ArrayList<>();
 
     private boolean isBuilt;
@@ -31,11 +34,11 @@ public class Building extends BuildingConfig {
     private int saveTaskId;
     private int calcTaskId;
 
-    private int placedBlocks;
+    private int placedBlockCount;
 
     public Building(String fileName) {
         super(fileName);
-        placedBlocks = 0;
+        placedBlockCount = 0;
         if (getConfig().getConfigurationSection("inventory") == null) {
             getConfig().createSection("inventory");
             saveConfig();
@@ -122,6 +125,17 @@ public class Building extends BuildingConfig {
                 saveInventory();
             }
         }, 0, 20 * 60).getTaskId();
+
+        for (SchemBlock schemBlock : getRequiredBlocks()) {
+            if (!schemBlock.isPlaced()) {
+                continue;
+            }
+            if (placedBlocks.containsKey(schemBlock.getMaterial())) {
+                placedBlocks.put(schemBlock.getMaterial(), placedBlocks.get(schemBlock.getMaterial()) + 1);
+            } else {
+                placedBlocks.put(schemBlock.getMaterial(), 1);
+            }
+        }
         checkPlacedBlocks();
     }
 
@@ -130,19 +144,19 @@ public class Building extends BuildingConfig {
             @Override
             public void run() {
                 int blocks = 0;
-                for (SchemBlock schemBlock : getAllBlocksNeeded()) {
+                for (SchemBlock schemBlock : getRequiredBlocks()) {
                     if (!schemBlock.isPlaced()) {
                         continue;
                     }
                     blocks++;
                 }
-                placedBlocks = blocks;
+                placedBlockCount = blocks;
             }
         }, 0, 20).getTaskId();
     }
 
     public int getPlacedBlocksCount() {
-        return placedBlocks;
+        return placedBlockCount;
     }
 
     public double getProgress() {
@@ -154,7 +168,7 @@ public class Building extends BuildingConfig {
     }
 
     public int getAllBlocksRequiredCount() {
-        return getAllBlocksNeeded().size();
+        return getRequiredBlocks().size();
     }
 
     public void build() {
@@ -164,6 +178,10 @@ public class Building extends BuildingConfig {
 
         ItemStack item = inventory.get(0);
         SchemBlock schemBlock = getNextBlock(item.getType());
+        if (schemBlock == null) {
+            inventory.remove(item);
+            return;
+        }
         Location nextBlockLocation = schemBlock.getLocation();
         Block block = getWorld().getBlockAt(nextBlockLocation);
         block.setType(item.getType());
@@ -172,6 +190,11 @@ public class Building extends BuildingConfig {
         blockState.update(true);
 
         removeBlock(nextBlockLocation);
+        if (placedBlocks.containsKey(item.getType())) {
+            placedBlocks.put(item.getType(), placedBlocks.get(item.getType()) + 1);
+        } else {
+            placedBlocks.put(item.getType(), 1);
+        }
 
         if (item.getAmount() == 1) {
             inventory.remove(item);
@@ -182,7 +205,7 @@ public class Building extends BuildingConfig {
     }
 
     public SchemBlock getNextBlock(Material material) {
-        for (SchemBlock schemBlock : getAllBlocksNeeded()) {
+        for (SchemBlock schemBlock : getRequiredBlocks()) {
             if (schemBlock.getMaterial() == material && !schemBlock.isPlaced()) {
                 return schemBlock;
             }
@@ -191,12 +214,12 @@ public class Building extends BuildingConfig {
     }
 
     public void removeBlock(Location location) {
-        for (SchemBlock schemBlock : getAllBlocksNeeded()) {
+        for (SchemBlock schemBlock : getRequiredBlocks()) {
             int x = schemBlock.getLocation().getBlockX();
             int y = schemBlock.getLocation().getBlockY();
             int z = schemBlock.getLocation().getBlockZ();
             if (x == location.getBlockX() && y == location.getBlockY() && z == location.getBlockZ()) {
-                getAllBlocksNeeded().remove(schemBlock);
+                getRequiredBlocks().remove(schemBlock);
                 return;
             }
         }
@@ -220,13 +243,28 @@ public class Building extends BuildingConfig {
         return getBlocksNeeded().containsKey(material);
     }
 
+    public Map<Material, Integer> getBlocksNeeded() {
+        Map<Material, Integer> blocksNeeded = new HashMap<>();
+        for (Entry<Material, Integer> block : getAllBlocksNeeded().entrySet()) {
+            if (placedBlocks.containsKey(block.getKey())) {
+                int needed = block.getValue() - placedBlocks.get(block.getKey());
+                if (needed > 0) {
+                    blocksNeeded.put(block.getKey(), needed);
+                }
+            } else {
+                blocksNeeded.put(block.getKey(), block.getValue());
+            }
+        }
+        return blocksNeeded;
+    }
+
     public void setBuilt(boolean built) {
         isBuilt = built;
     }
 
     public void displayParticlesOnBlocks() {
-        Bukkit.getLogger().info(getAllBlocksNeeded().get(0).getLocation().toString());
-        for (SchemBlock schemBlock : getAllBlocksNeeded()) {
+        Bukkit.getLogger().info(getRequiredBlocks().get(0).getLocation().toString());
+        for (SchemBlock schemBlock : getRequiredBlocks()) {
             getWorld().spawnParticle(Particle.END_ROD, schemBlock.getLocation(), 1, 0, 0, 0, 0);
         }
     }

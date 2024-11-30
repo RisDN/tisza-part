@@ -54,19 +54,19 @@ public class Config {
 
         setConfig("messages.no-permission", "%prefix% &cNincs jogosultságod ehhez!");
         setConfig("messages.reloaded", "%prefix% &aConfig újratöltve!");
-        setConfig("messages.block-no-longer-needed", "%prefix% &cEz a blokk már nem szükséges az épülethez! &7(%block%)");
-        setConfig("messages.block-not-needed", "%prefix% &cEz a blokk nem szükséges az épülethez! &7(%block%)");
+        setConfig("messages.block-no-longer-needed", "%prefix% &cEz a blokk már nem szükséges az épülethez! &7(%block%&7)");
+        setConfig("messages.block-not-needed", "%prefix% &cEz a blokk nem szükséges az épülethez! &7(%block%&7)");
         setConfig("messages.no-buildings", "%prefix% &cJelenleg nics megépítendő épület!");
         setConfig("messages.not-accesible-page", "%prefix% &cNem létező oldal!");
         setConfig("messages.building-finished", "%prefix% &aAz épület elkészült!");
         setConfig("messages.items-list.header", "&aAz épülethez szükséges blokkok:");
         setConfig("messages.items-list.item", "&7%material% &8- &e%amount%");
-        setConfig("messages.items-list.next", "&7[&eKövetkező&7]");
-        setConfig("messages.items-list.back", "&7[&cVissza&7]");
+        setConfig("messages.items-list.next", " &7[&eKövetkező&7]");
+        setConfig("messages.items-list.back", "&7[&cVissza&7] ");
         setConfig("messages.items-list.page", "&7[&e%page%&7]");
         setConfig("messages.items-list.current-page", "&7[&e&l%page%&7]");
         setConfig("messages.item-adding-menu-title", "Alapanyag hozzáadása");
-
+        setConfig("messages.too-many-blocks", "%prefix% &cTúl sok blokkot adtál hozzá, a marakdékot visszakapod! &7(%block%&7)");
         setConfig("settings.player-saving-interval", 30);
         setConfig("settings.building-delay", 3);
 

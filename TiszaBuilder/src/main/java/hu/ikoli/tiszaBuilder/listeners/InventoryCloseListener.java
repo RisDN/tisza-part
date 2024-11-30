@@ -56,6 +56,12 @@ public class InventoryCloseListener implements Listener {
             if (building.getNextBlock(item.getType()) == null) {
                 continue;
             }
+            int neededBlockCount = building.getBlocksNeeded().get(item.getType());
+            if (neededBlockCount < item.getAmount()) {
+                TiszaBuilder.getLocaleManager().sendMessage(player, Config.getMessage("too-many-blocks").replace("%block%", "<item>"), item);
+                player.getInventory().addItem(new ItemStack(item.getType(), item.getAmount() - neededBlockCount));
+                item = new ItemStack(item.getType(), neededBlockCount);
+            }
 
             BuildingPlayer buildingPlayer = BuildingPlayer.getBuildingPlayer(player);
 

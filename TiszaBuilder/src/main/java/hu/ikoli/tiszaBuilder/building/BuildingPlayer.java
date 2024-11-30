@@ -119,14 +119,18 @@ public class BuildingPlayer {
     }
 
     public static int getContrubotorPlace(String player) {
-        int place = 0;
+        if (playerData.getConfig().getConfigurationSection("players") == null) {
+            return 0;
+        }
+
+        int place = 1;
         for (String p : playerData.getConfig().getConfigurationSection("players").getKeys(false)) {
             if (getPlacedBlocksCount(p) > getPlacedBlocksCount(player)) {
                 place++;
             }
         }
 
-        return place + 1;
+        return place;
     }
 
 }

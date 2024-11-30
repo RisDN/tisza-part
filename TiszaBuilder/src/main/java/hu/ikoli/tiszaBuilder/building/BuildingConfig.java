@@ -31,8 +31,8 @@ public abstract class BuildingConfig {
     private String fileName;
     private FileManager config;
     private String displayname;
-    private List<SchemBlock> allBlocksNeeded = new ArrayList<SchemBlock>();
-    private Map<Material, Integer> blocksNeeded = new HashMap<Material, Integer>();
+    private List<SchemBlock> requiredBlocks = new ArrayList<SchemBlock>();
+    private Map<Material, Integer> allBlocksNeeded = new HashMap<Material, Integer>();
 
     public BuildingConfig(String fileName) {
         Bukkit.getLogger().info("Loading building: " + fileName);
@@ -81,12 +81,12 @@ public abstract class BuildingConfig {
         return Utils.color(displayname);
     }
 
-    public List<SchemBlock> getAllBlocksNeeded() {
-        return new ArrayList<>(allBlocksNeeded);
+    public List<SchemBlock> getRequiredBlocks() {
+        return new ArrayList<>(requiredBlocks);
     }
 
-    public Map<Material, Integer> getBlocksNeeded() {
-        return new HashMap<>(blocksNeeded);
+    public Map<Material, Integer> getAllBlocksNeeded() {
+        return new HashMap<>(allBlocksNeeded);
     }
 
     public FileConfiguration getConfig() {
@@ -141,15 +141,15 @@ public abstract class BuildingConfig {
                         continue;
                     }
 
-                    if (blocksNeeded.containsKey(material)) {
-                        blocksNeeded.put(material, blocksNeeded.get(material) + 1);
+                    if (allBlocksNeeded.containsKey(material)) {
+                        allBlocksNeeded.put(material, allBlocksNeeded.get(material) + 1);
                     } else {
-                        blocksNeeded.put(material, 1);
+                        allBlocksNeeded.put(material, 1);
                     }
                     if (material.equals(Material.AIR)) {
                         continue;
                     }
-                    allBlocksNeeded.add(new SchemBlock(location, blockData));
+                    requiredBlocks.add(new SchemBlock(location, blockData));
                 }
             }
         } catch (Exception e) {
