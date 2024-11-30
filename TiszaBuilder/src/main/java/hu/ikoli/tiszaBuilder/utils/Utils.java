@@ -37,10 +37,10 @@ public class Utils {
         if (places < 0)
             throw new IllegalArgumentException();
 
-        long factor = (long) Math.pow(10, places);
+        double factor = (long) Math.pow(10, places);
         value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
+        double tmp = Math.round(value);
+        return tmp / factor;
     }
 
 }
