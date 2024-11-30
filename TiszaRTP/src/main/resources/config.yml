@@ -1,0 +1,21 @@
+prefix: "&8[&fTalpra, Fiatalok&8] »&f"
+
+modules:
+  randomtp:
+    size: 5000
+    enabled: true
+    world: "nether"
+    world-type: nether
+    max-tries: 30
+    size-modifier: 0.75
+    cooldown-seconds: 600
+
+messages:
+  reload-success: "%prefix% &aA plugin fájlainak újratöltése sikerrel zárult."
+  rtp:
+    place-finding: "%prefix% &eTökéletes hely keresése.."
+    failed: "%prefix% &cNem találtuk meg neked a tökéletes helyet, kérlek próbáld újra.. &4:("
+    teleported: "%prefix% &aSikeresen elteleportáltál a nagyvilágba! Sok sikert!"
+    cooldown: "%prefix% &cKérlek várj &4%cooldown% másodpercet &ca következő teleportálásig!"
+    success: "%prefix% &aSikeresen elteleportáltál a nagyvilágba! Sok sikert!"
+messages-version: "1"

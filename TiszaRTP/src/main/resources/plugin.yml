@@ -1,0 +1,11 @@
+name: TiszaRTP
+main: hu.ris.tiszartp.TiszaRTP
+version: 1.0
+description: TiszaRTP plugin
+api-version: 1.21
+author: Ris
+prefix: "TiszaRTP"
+
+commands:
+  rtp:
+    aliases: [randomtp, tiszartp]
