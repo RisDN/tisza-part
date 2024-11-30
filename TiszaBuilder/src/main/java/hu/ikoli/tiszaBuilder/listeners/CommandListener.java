@@ -15,7 +15,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
+import hu.ikoli.tiszabuilder.TiszaBuilder;
 import hu.ikoli.tiszabuilder.building.Building;
 import hu.ikoli.tiszabuilder.building.ItemAdding;
 import hu.ikoli.tiszabuilder.config.Config;
@@ -65,22 +67,19 @@ public class CommandListener implements CommandExecutor, Listener, TabCompleter 
             player.sendMessage("");
             player.sendMessage("§aAz épülethez szükséges blokkok:");
             for (Entry<Material, Integer> entry : blocksNeeded.entrySet()) {
-                player.sendMessage("§7" + entry.getKey().name() + " §8- §e" + entry.getValue());
+                TiszaBuilder.getLocaleManager().sendMessage(player, "§7<item>" + " §8- §e" + entry.getValue(), new ItemStack(Material.valueOf(entry.getKey().name())));
             }
 
             Component message;
-            Component back = Component.text().content(Config.getMessage("items-list.back"))
-                    .clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page - 1))).build();
-            Component next = Component.text().content(Config.getMessage("items-list.next"))
-                    .clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page + 1))).build();
+            Component back = Component.text().content(Config.getMessage("items-list.back")).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page - 1))).build();
+            Component next = Component.text().content(Config.getMessage("items-list.next")).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page + 1))).build();
             Builder pagesComponent = Component.text();
             for (int i = 0; i < pages; i++) {
                 if (i + 1 == page) {
                     pagesComponent.append(Component.text().content(Config.getMessage("items-list.current-page").replace("%page%", String.valueOf(i + 1))));
                     continue;
                 }
-                pagesComponent.append(Component.text().content(Config.getMessage("items-list.page").replace("%page%", String.valueOf(i + 1)))
-                        .clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (i + 1))));
+                pagesComponent.append(Component.text().content(Config.getMessage("items-list.page").replace("%page%", String.valueOf(i + 1))).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (i + 1))));
             }
 
             if (page == 1) {

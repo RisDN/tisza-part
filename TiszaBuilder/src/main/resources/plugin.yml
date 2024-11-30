@@ -4,6 +4,7 @@ version: 1.0
 api-version: 1.21
 author: ikoli, Ris
 soft-depend: [PlaceholderAPI]
+depend: [LocaleLib]
 
 libraries:
   - redis.clients:jedis:4.4.0

@@ -65,6 +65,7 @@ public class Config {
         setConfig("messages.items-list.back", "&7[&cVissza&7]");
         setConfig("messages.items-list.page", "&7[&e%page%&7]");
         setConfig("messages.items-list.current-page", "&7[&e&l%page%&7]");
+        setConfig("messages.item-adding-menu-title", "Alapanyag hozzáadása");
 
         setConfig("settings.player-saving-interval", 30);
         setConfig("settings.building-delay", 3);

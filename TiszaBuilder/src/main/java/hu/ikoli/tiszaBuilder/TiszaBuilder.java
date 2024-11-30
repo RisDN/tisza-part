@@ -17,6 +17,8 @@ import hu.ikoli.tiszabuilder.listeners.PlayerJoinListener;
 import hu.ikoli.tiszabuilder.listeners.PlayerQuitListener;
 import hu.ikoli.tiszabuilder.redis.JedisConnection;
 import hu.ikoli.tiszabuilder.utils.FileManager;
+import me.pikamug.localelib.LocaleLib;
+import me.pikamug.localelib.LocaleManager;
 
 public class TiszaBuilder extends JavaPlugin {
 
@@ -26,6 +28,7 @@ public class TiszaBuilder extends JavaPlugin {
 	private static File pluginDataFolder;
 	private static FileManager playerData;
 	private static JedisConnection jedisConnection;
+	private static LocaleManager localeManager;
 
 	private BukkitTask playerSavingTask;
 	private BukkitTask redisFetchTask;
@@ -42,6 +45,11 @@ public class TiszaBuilder extends JavaPlugin {
 
 		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+
+		LocaleLib localeLib = (LocaleLib) getServer().getPluginManager().getPlugin("LocaleLib");
+		if (localeLib != null) {
+			localeManager = localeLib.getLocaleManager();
+		}
 
 		pluginDataFolder = getDataFolder();
 		config = new Config();
@@ -146,6 +154,10 @@ public class TiszaBuilder extends JavaPlugin {
 		}
 
 		playerSavingTask.cancel();
+	}
+
+	public static LocaleManager getLocaleManager() {
+		return localeManager;
 	}
 
 	public static JedisConnection getJedisConnection() {

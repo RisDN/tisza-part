@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
+import hu.ikoli.tiszabuilder.TiszaBuilder;
 import hu.ikoli.tiszabuilder.building.Building;
 import hu.ikoli.tiszabuilder.building.BuildingPlayer;
 import hu.ikoli.tiszabuilder.building.ItemsAddingMenuHolder;
@@ -41,7 +42,7 @@ public class InventoryCloseListener implements Listener {
             }
 
             if (!building.isBlockNeeded(item.getType())) {
-                player.sendMessage(Config.getMessage("block-not-needed").replace("%block%", item.getType().toString()));
+                TiszaBuilder.getLocaleManager().sendMessage(player, Config.getMessage("block-not-needed").replace("%block%", "<item>"), item);
                 player.getInventory().addItem(item);
                 continue;
             }
