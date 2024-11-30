@@ -7,6 +7,9 @@ import org.bspfsystems.yamlconfiguration.configuration.ConfigurationSection;
 import org.bspfsystems.yamlconfiguration.configuration.InvalidConfigurationException;
 import org.bspfsystems.yamlconfiguration.file.YamlConfiguration;
 
+import hu.ris.tiszaauth.Utils;
+import net.kyori.adventure.text.Component;
+
 public class Config {
 
     private static File folder;
@@ -45,9 +48,33 @@ public class Config {
         setDefaultConfig("mysql.pass", "password");
         setDefaultConfig("mysql.table", "links");
 
+        setDefaultConfig("prefix", "<gray>[<gold>TiszaAuth<gray>] ");
+        setDefaultConfig("language.reload", "<green>Sikeresen újratöltötted a konfigurációt!");
+        setDefaultConfig("language.no-lobby", "<red>Nincs beállítva lobby!");
+
+
         setDefaultConfig("messages.not_linked", "<red>Ez a felhasználó nincs összekapcsolva a Discord fiókoddal. Kérlek csatlakozz a Discord szerverünkhöz és kövesd az instrukciókat! https://discord.gg/YjBkzgCZtx");
 
         saveConfig();
+    }
+
+    public static void reloadConfig() {
+        File file = new File(folder, "config.yml");
+        if (!file.getParentFile().isDirectory()) {
+            loadDefaultConfig();
+            return;
+        }
+
+        try {
+            config = new YamlConfiguration();
+            config.load(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Component getMessage(String node) {
+        return Utils.color(config.getString("language." + node).replace("%prefix%", getPrefix() + "<reset>"));
     }
 
     public static void saveConfig() {
@@ -61,6 +88,10 @@ public class Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getPrefix() {
+        return config.getString("prefix");
     }
 
     private static void setDefaultConfig(String node, Object value) {
