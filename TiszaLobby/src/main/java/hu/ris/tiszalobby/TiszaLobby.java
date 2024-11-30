@@ -1,5 +1,6 @@
 package hu.ris.tiszalobby;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -59,7 +60,12 @@ public class TiszaLobby extends JavaPlugin implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
-        runCommands(player);
+        Bukkit.getScheduler().runTaskLater(instance, new Runnable() {
+            @Override
+            public void run() {
+                runCommands(player);
+            }
+        }, 30 * 20);
     }
 
     private void runCommands(Player player) {
