@@ -56,7 +56,8 @@ public class CommandListener implements CommandExecutor, Listener, TabCompleter 
             }
             int page = Integer.parseInt(pageString);
             // A blocksNeeded map-et rendezzük az értékek szerint csökkenő sorrendbe
-            Map<Material, Integer> blocksNeeded = building.getBlocksNeeded().entrySet().stream().sorted(Entry.<Material, Integer>comparingByValue().reversed()).skip((page - 1) * 10).limit(10) // Csökkenő sorrend
+            Map<Material, Integer> blocksNeeded = building.getBlocksNeeded().entrySet().stream().sorted(Entry.<Material, Integer>comparingByValue().reversed()).skip((page - 1) * 10).limit(10) // Csökkenő
+                                                                                                                                                                                                // sorrend
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, // Ütközéskezelés, ha lenne ismétlődő kulcs
                             LinkedHashMap::new // Sorrendet megőrző Map
                     ));
@@ -68,15 +69,18 @@ public class CommandListener implements CommandExecutor, Listener, TabCompleter 
             }
 
             Component message;
-            Component back = Component.text().content(Config.getMessage("items-list.back")).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page - 1))).build();
-            Component next = Component.text().content(Config.getMessage("items-list.next")).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page + 1))).build();
+            Component back = Component.text().content(Config.getMessage("items-list.back"))
+                    .clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page - 1))).build();
+            Component next = Component.text().content(Config.getMessage("items-list.next"))
+                    .clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page + 1))).build();
             Builder pagesComponent = Component.text();
             for (int i = 0; i < pages; i++) {
                 if (i + 1 == page) {
                     pagesComponent.append(Component.text().content(Config.getMessage("items-list.current-page").replace("%page%", String.valueOf(i + 1))));
                     continue;
                 }
-                pagesComponent.append(Component.text().content(Config.getMessage("items-list.page").replace("%page%", String.valueOf(i + 1))).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (i + 1))));
+                pagesComponent.append(Component.text().content(Config.getMessage("items-list.page").replace("%page%", String.valueOf(i + 1)))
+                        .clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (i + 1))));
             }
 
             if (page == 1) {

@@ -11,8 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.type.Stairs;
 import org.bukkit.inventory.ItemStack;
 
 import hu.ikoli.tiszabuilder.TiszaBuilder;
@@ -30,6 +28,7 @@ public class Building extends BuildingConfig {
     private boolean isBuilt;
 
     private int buildingTaskId;
+    private int saveTaskId;
 
     public Building(String fileName) {
         super(fileName);
@@ -81,7 +80,7 @@ public class Building extends BuildingConfig {
     }
 
     public void saveInventory() {
-
+        reloadConfig();
         if (inventory.size() == 0) {
             getConfig().set("inventory", null);
             saveConfig();
@@ -106,14 +105,20 @@ public class Building extends BuildingConfig {
     }
 
     public void startBuildingTask() {
-        buildingTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(TiszaBuilder.getInstance(),
+        long delay = (long) Config.getDouble("settings.building-delay") * 20;
+        buildingTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(TiszaBuilder.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                build();
+            }
+        }, delay, delay);
 
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        build();
-                    }
-                }, 5, 5);
+        saveTaskId = Bukkit.getScheduler().runTaskTimerAsynchronously(TiszaBuilder.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                saveInventory();
+            }
+        }, 0, 20 * 60).getTaskId();
     }
 
     public int getPlacedBlocksCount() {
@@ -122,7 +127,6 @@ public class Building extends BuildingConfig {
             if (!schemBlock.isPlaced()) {
                 continue;
             }
-
             sum++;
         }
 
@@ -147,36 +151,22 @@ public class Building extends BuildingConfig {
         }
 
         ItemStack item = inventory.get(0);
+        SchemBlock schemBlock = getNextBlock(item.getType());
+        Location nextBlockLocation = schemBlock.getLocation();
+        Block block = getWorld().getBlockAt(nextBlockLocation);
+        block.setType(item.getType());
+        BlockState blockState = block.getState();
+        blockState.setBlockData(schemBlock.getBlockData());
+        blockState.update(true);
 
-        inventory.remove(item);
-        for (int i = 0; i < item.getAmount(); i++) {
-            long delay = i * (long) Config.getDouble("settings.building-delay") * 20;
-            Bukkit.getScheduler().runTaskLater(TiszaBuilder.getInstance(),
+        removeBlock(nextBlockLocation);
 
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            SchemBlock schemBlock = getNextBlock(item.getType());
-                            Location nextBlockLocation = schemBlock.getLocation();
-                            Block block = getWorld().getBlockAt(nextBlockLocation);
-                            block.setType(item.getType());
-                            BlockState blockState = block.getState();
-
-                            if (blockState.getBlockData() instanceof Directional directional) {
-                                directional.setFacing(schemBlock.getBlockFace());
-                                blockState.setBlockData(directional);
-                                blockState.update(true);
-                            }
-                            if (blockState.getBlockData() instanceof Stairs stairs) {
-                                stairs.setShape(schemBlock.getShape());
-                                blockState.setBlockData(stairs);
-                                blockState.update(true);
-                            }
-
-                            removeBlock(nextBlockLocation);
-                        }
-                    }, delay);
+        if (item.getAmount() == 1) {
+            inventory.remove(item);
+        } else {
+            item.setAmount(item.getAmount() - 1);
         }
+
     }
 
     public SchemBlock getNextBlock(Material material) {
@@ -195,7 +185,6 @@ public class Building extends BuildingConfig {
             int z = schemBlock.getLocation().getBlockZ();
             if (x == location.getBlockX() && y == location.getBlockY() && z == location.getBlockZ()) {
                 getAllBlocksNeeded().remove(schemBlock);
-                saveInventory();
                 return;
             }
         }
@@ -203,6 +192,7 @@ public class Building extends BuildingConfig {
 
     public void stopBuildingTask() {
         Bukkit.getScheduler().cancelTask(buildingTaskId);
+        Bukkit.getScheduler().cancelTask(saveTaskId);
     }
 
     public void addItem(ItemStack item) {
@@ -229,7 +219,7 @@ public class Building extends BuildingConfig {
     }
 
     public static List<Building> getBuildings() {
-        return buildings;
+        return new ArrayList<>(buildings);
     }
 
     public static List<String> getBuildingNames() {

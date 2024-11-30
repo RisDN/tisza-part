@@ -68,9 +68,7 @@ public class InventoryCloseListener implements Listener {
             player.sendMessage(Config.getMessage("block-no-longer-needed").replace("%block%", material.toString()));
         }
 
-        building.saveInventory();
         building.syncStatsToRedis();
-
     }
 
 }

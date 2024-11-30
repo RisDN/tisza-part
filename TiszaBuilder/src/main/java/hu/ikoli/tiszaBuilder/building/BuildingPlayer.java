@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -85,7 +86,11 @@ public class BuildingPlayer {
     }
 
     public static int getContributorsCount() {
-        return playerData.getConfig().getConfigurationSection("players").getKeys(false).size();
+        ConfigurationSection players = playerData.getConfig().getConfigurationSection("players");
+        if (players == null) {
+            return 0;
+        }
+        return players.getKeys(false).size();
     }
 
     public static List<BuildingPlayer> getBuildingPlayers() {
