@@ -29,10 +29,13 @@ public class Building extends BuildingConfig {
 
     private int buildingTaskId;
     private int saveTaskId;
+    private int calcTaskId;
+
+    private int placedBlocks;
 
     public Building(String fileName) {
         super(fileName);
-
+        placedBlocks = 0;
         if (getConfig().getConfigurationSection("inventory") == null) {
             getConfig().createSection("inventory");
             saveConfig();
@@ -119,18 +122,27 @@ public class Building extends BuildingConfig {
                 saveInventory();
             }
         }, 0, 20 * 60).getTaskId();
+        checkPlacedBlocks();
+    }
+
+    public void checkPlacedBlocks() {
+        calcTaskId = Bukkit.getScheduler().runTaskTimerAsynchronously(TiszaBuilder.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                int blocks = 0;
+                for (SchemBlock schemBlock : getAllBlocksNeeded()) {
+                    if (!schemBlock.isPlaced()) {
+                        continue;
+                    }
+                    blocks++;
+                }
+                placedBlocks = blocks;
+            }
+        }, 0, 20).getTaskId();
     }
 
     public int getPlacedBlocksCount() {
-        int sum = 0;
-        for (SchemBlock schemBlock : getAllBlocksNeeded()) {
-            if (!schemBlock.isPlaced()) {
-                continue;
-            }
-            sum++;
-        }
-
-        return sum;
+        return placedBlocks;
     }
 
     public double getProgress() {
@@ -193,6 +205,7 @@ public class Building extends BuildingConfig {
     public void stopBuildingTask() {
         Bukkit.getScheduler().cancelTask(buildingTaskId);
         Bukkit.getScheduler().cancelTask(saveTaskId);
+        Bukkit.getScheduler().cancelTask(calcTaskId);
     }
 
     public void addItem(ItemStack item) {
