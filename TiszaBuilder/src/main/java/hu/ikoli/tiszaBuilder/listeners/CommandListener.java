@@ -85,12 +85,14 @@ public class CommandListener implements CommandExecutor, Listener, TabCompleter 
                         .clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (i + 1))));
             }
 
-            if (page == 1) {
-                message = Component.text().append(pagesComponent.build()).append(next).build();
+            if (pages == 1) {
+                message = Component.text().append(pagesComponent.build()).build(); // Csak egy oldal van
+            } else if (page < pages && page == 1) {
+                message = Component.text().append(pagesComponent.build()).append(next).build(); // Van még oldal, de az elsőn vagyunk
             } else if (page < pages) {
-                message = Component.text().append(back).append(pagesComponent.build()).append(next).build();
+                message = Component.text().append(back).append(pagesComponent.build()).append(next).build(); // Van még oldal, de nem az elsőn vagyunk
             } else {
-                message = Component.text().append(back).append(pagesComponent.build()).build();
+                message = Component.text().append(back).append(pagesComponent.build()).build(); // Az utolsó oldalon vagyunk
             }
 
             Bukkit.getScheduler().runTaskLater(TiszaBuilder.getInstance(), new Runnable() {

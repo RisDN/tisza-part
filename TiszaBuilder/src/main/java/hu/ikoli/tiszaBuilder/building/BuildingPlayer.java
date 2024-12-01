@@ -94,11 +94,11 @@ public class BuildingPlayer {
     }
 
     public static List<BuildingPlayer> getBuildingPlayers() {
-        return buildingPlayers;
+        return new ArrayList<BuildingPlayer>(buildingPlayers);
     }
 
     public static BuildingPlayer getBuildingPlayer(Player player) {
-        for (BuildingPlayer buildingPlayer : buildingPlayers) {
+        for (BuildingPlayer buildingPlayer : getBuildingPlayers()) {
             if (buildingPlayer.getPlayer().getName().equals(player.getName())) {
                 return buildingPlayer;
             }

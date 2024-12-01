@@ -57,32 +57,28 @@ public class Building extends BuildingConfig {
     }
 
     public void syncStatsToRedis() {
-
         if (!Config.getServerType().equals(ServerType.BUILDING)) {
             return;
         }
 
-        Bukkit.getScheduler().runTaskAsynchronously(TiszaBuilder.getInstance(),
+        Bukkit.getScheduler().runTaskAsynchronously(TiszaBuilder.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                jedis.set("building_displayname", getDisplayname());
+                jedis.set("building_filename", getFileName());
+                jedis.set("building_progress", String.valueOf(getProgress()));
+                jedis.set("building_blocks_needed", String.valueOf(getAllBlocksRequiredCount()));
+                jedis.set("building_blocks_placed", String.valueOf(getPlacedBlocksCount()));
+                jedis.set("building_contributors", String.valueOf(BuildingPlayer.getContributorsCount()));
 
-                new Runnable() {
-                    @Override
-                    public void run() {
-
-                        jedis.set("building_displayname", getDisplayname());
-                        jedis.set("building_filename", getFileName());
-                        jedis.set("building_progress", String.valueOf(getProgress()));
-                        jedis.set("building_blocks_needed", String.valueOf(getAllBlocksRequiredCount()));
-                        jedis.set("building_blocks_placed", String.valueOf(getPlacedBlocksCount()));
-                        jedis.set("building_contributors", String.valueOf(BuildingPlayer.getContributorsCount()));
-
-                        for (BuildingPlayer buildingPlayer : BuildingPlayer.getBuildingPlayers()) {
-                            String node = buildingPlayer.getPlayer().getName() + ".";
-                            jedis.set(node + "player_blocks_placed", String.valueOf(buildingPlayer.getBlocksPlaced()));
-                            jedis.set(node + "player_blocks_placed_progress", String.valueOf(getProgress(buildingPlayer)));
-                            jedis.set(node + "player_contrubution_place", String.valueOf(BuildingPlayer.getContrubotorPlace(buildingPlayer.getPlayer().getName())));
-                        }
-                    }
-                });
+                for (BuildingPlayer buildingPlayer : BuildingPlayer.getBuildingPlayers()) {
+                    String node = buildingPlayer.getPlayer().getName() + ".";
+                    jedis.set(node + "player_blocks_placed", String.valueOf(buildingPlayer.getBlocksPlaced()));
+                    jedis.set(node + "player_blocks_placed_progress", String.valueOf(getProgress(buildingPlayer)));
+                    jedis.set(node + "player_contrubution_place", String.valueOf(BuildingPlayer.getContrubotorPlace(buildingPlayer.getPlayer().getName())));
+                }
+            }
+        });
     }
 
     public void saveInventory() {
@@ -177,36 +173,42 @@ public class Building extends BuildingConfig {
         }
 
         ItemStack item = inventory.get(0);
-        SchemBlock schemBlock = getNextBlock(item.getType());
-        if (schemBlock == null) {
-            inventory.remove(item);
-            return;
-        }
-        Location nextBlockLocation = schemBlock.getLocation();
-        Block block = getWorld().getBlockAt(nextBlockLocation);
-        block.setType(item.getType());
-        BlockState blockState = block.getState();
-        blockState.setBlockData(schemBlock.getBlockData());
-        blockState.update(true);
 
-        removeBlock(nextBlockLocation);
-        if (placedBlocks.containsKey(item.getType())) {
-            placedBlocks.put(item.getType(), placedBlocks.get(item.getType()) + 1);
-        } else {
-            placedBlocks.put(item.getType(), 1);
-        }
+        int blocksToPut = item.getAmount() > 8 ? 8 : 1;
+        for (int i = 0; i < blocksToPut; i++) {
+            SchemBlock schemBlock = getNextBlock(item.getType());
+            if (schemBlock == null) {
+                inventory.remove(item);
+                return;
+            }
+            Location nextBlockLocation = schemBlock.getLocation();
+            System.out.println(
+                    "Placing " + item.getType().toString() + " at " + nextBlockLocation.getX() + " " + nextBlockLocation.getY() + " " + nextBlockLocation.getZ() + " count: " + item.getAmount());
+            Block block = getWorld().getBlockAt(nextBlockLocation);
+            block.setType(item.getType());
+            BlockState blockState = block.getState();
+            blockState.setBlockData(schemBlock.getBlockData());
+            blockState.update(true);
 
-        if (item.getAmount() == 1) {
-            inventory.remove(item);
-        } else {
-            item.setAmount(item.getAmount() - 1);
+            removeBlock(nextBlockLocation);
+            if (placedBlocks.containsKey(item.getType())) {
+                placedBlocks.put(item.getType(), placedBlocks.get(item.getType()) + 1);
+            } else {
+                placedBlocks.put(item.getType(), 1);
+            }
+
+            if (item.getAmount() == 1) {
+                inventory.remove(item);
+            } else {
+                item.setAmount(item.getAmount() - 1);
+            }
         }
 
     }
 
     public SchemBlock getNextBlock(Material material) {
         for (SchemBlock schemBlock : getRequiredBlocks()) {
-            if (schemBlock.getMaterial() == material && !schemBlock.isPlaced()) {
+            if (!schemBlock.isPlaced() && schemBlock.getMaterial() == material) {
                 return schemBlock;
             }
         }
@@ -247,7 +249,7 @@ public class Building extends BuildingConfig {
         Map<Material, Integer> blocksNeeded = new HashMap<>();
         for (Entry<Material, Integer> block : getAllBlocksNeeded().entrySet()) {
             if (placedBlocks.containsKey(block.getKey())) {
-                int needed = block.getValue() - placedBlocks.get(block.getKey());
+                int needed = block.getValue() - (placedBlocks.get(block.getKey()) + getBlockCountFromInventory(block.getKey()));
                 if (needed > 0) {
                     blocksNeeded.put(block.getKey(), needed);
                 }
@@ -256,6 +258,16 @@ public class Building extends BuildingConfig {
             }
         }
         return blocksNeeded;
+    }
+
+    public int getBlockCountFromInventory(Material material) {
+        int count = 0;
+        for (ItemStack item : new ArrayList<>(inventory)) {
+            if (item.getType() == material) {
+                count += item.getAmount();
+            }
+        }
+        return count;
     }
 
     public void setBuilt(boolean built) {
