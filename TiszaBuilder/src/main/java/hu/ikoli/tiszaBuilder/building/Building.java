@@ -174,7 +174,7 @@ public class Building extends BuildingConfig {
 
         ItemStack item = inventory.get(0);
 
-        int blocksToPut = item.getAmount() > 8 ? 8 : 1;
+        int blocksToPut = item.getAmount() > 8 ? 8 : item.getAmount();
         for (int i = 0; i < blocksToPut; i++) {
             SchemBlock schemBlock = getNextBlock(item.getType());
             if (schemBlock == null) {
@@ -182,8 +182,6 @@ public class Building extends BuildingConfig {
                 return;
             }
             Location nextBlockLocation = schemBlock.getLocation();
-            System.out.println(
-                    "Placing " + item.getType().toString() + " at " + nextBlockLocation.getX() + " " + nextBlockLocation.getY() + " " + nextBlockLocation.getZ() + " count: " + item.getAmount());
             Block block = getWorld().getBlockAt(nextBlockLocation);
             block.setType(item.getType());
             BlockState blockState = block.getState();

@@ -65,6 +65,12 @@ public class Config {
         setConfig("messages.items-list.back", "&7[&cVissza&7] ");
         setConfig("messages.items-list.page", "&7[&e%page%&7]");
         setConfig("messages.items-list.current-page", "&7[&e&l%page%&7]");
+
+        setConfig("messages.toplist.current-page", "&7[&e&l%page%&7]");
+        setConfig("messages.toplist.next", " &7[&eKövetkező&7]");
+        setConfig("messages.toplist.back", "&7[&cVissza&7] ");
+        setConfig("messages.toplist.page", "&7[&e%page%&7]");
+
         setConfig("messages.item-adding-menu-title", "Alapanyag hozzáadása");
         setConfig("messages.too-many-blocks", "%prefix% &cTúl sok blokkot adtál hozzá, a marakdékot visszakapod! &7(%block%&7)");
         setConfig("settings.player-saving-interval", 30);

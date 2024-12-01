@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -90,7 +91,16 @@ public class BuildingPlayer {
         if (players == null) {
             return 0;
         }
-        return players.getKeys(false).size();
+
+        int sum = 0;
+
+        for (String player : players.getKeys(false)) {
+            if (getPlacedBlocksCount(player) > 0) {
+                sum++;
+            }
+        }
+
+        return sum;
     }
 
     public static List<BuildingPlayer> getBuildingPlayers() {
@@ -131,6 +141,23 @@ public class BuildingPlayer {
         }
 
         return place;
+    }
+
+    public static Map<String, Integer> getPlacedToplist() {
+
+        Map<String, Integer> toplist = new HashMap<String, Integer>();
+        for (String key : playerData.getConfig().getConfigurationSection("players").getKeys(false)) {
+            int blocks = getPlacedBlocksCount(key);
+            if (blocks == 0) {
+                continue;
+            }
+            toplist.put(key, blocks);
+        }
+
+        // Sort the map by value
+        Map<String, Integer> sortedToplist = toplist.entrySet().stream().sorted(Map.Entry.<String, Integer>comparingByValue().reversed()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, HashMap::new));
+
+        return sortedToplist;
     }
 
 }

@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 import hu.ikoli.tiszabuilder.TiszaBuilder;
 import hu.ikoli.tiszabuilder.building.Building;
+import hu.ikoli.tiszabuilder.building.BuildingPlayer;
 import hu.ikoli.tiszabuilder.building.ItemAdding;
 import hu.ikoli.tiszabuilder.config.Config;
 import hu.ikoli.tiszabuilder.utils.Utils;
@@ -43,6 +44,60 @@ public class CommandListener implements CommandExecutor, Listener, TabCompleter 
         if (args[0].equalsIgnoreCase("additems") && Config.isBuildingServer()) {
             ItemAdding.openItemAddingMenu(player);
             return true;
+        }
+
+        if (args[0].equalsIgnoreCase("toplist") || args[0].equalsIgnoreCase("top")) {
+            String pageString = args.length == 1 ? "1" : args[1];
+            Map<String, Integer> topList = BuildingPlayer.getPlacedToplist();
+            int pages = (int) Math.ceil(((double) topList.size() / 10));
+
+            if (!Utils.isPositiveInteger(pageString) || Integer.parseInt(pageString) > pages) {
+                player.sendMessage(Config.getMessage("not-accesible-page"));
+                return true;
+            }
+
+            int page = Integer.parseInt(pageString);
+
+            Map<String, Integer> toplist = topList.entrySet().stream().sorted(Entry.<String, Integer>comparingByValue().reversed()).skip((page - 1) * 10).limit(10) // Csökkenősorrend
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, // Ütközéskezelés, ha lenne ismétlődő kulcs
+                            LinkedHashMap::new // Sorrendet megőrző Map
+                    ));
+
+            player.sendMessage("");
+            player.sendMessage("§aA legtöbb blokkot elhelyező játékosok:");
+            int index = 0;
+            for (Entry<String, Integer> entry : toplist.entrySet()) {
+                int place = (page - 1) * 10 + ++index;
+                player.sendMessage("§a#" + place + " §7" + entry.getKey() + " §8- §e" + entry.getValue());
+            }
+
+            Component message;
+            Component back = Component.text().content(Config.getMessage("toplist.back")).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% toplist ".replace("%command%", label) + (page - 1))).build();
+            Component next = Component.text().content(Config.getMessage("toplist.next")).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% toplist ".replace("%command%", label) + (page + 1))).build();
+            Builder pagesComponent = Component.text();
+
+            for (int i = 0; i < pages; i++) {
+                if (i + 1 == page) {
+                    pagesComponent.append(Component.text().content(Config.getMessage("toplist.current-page").replace("%page%", String.valueOf(i + 1))));
+                    continue;
+                }
+                pagesComponent.append(Component.text().content(Config.getMessage("toplist.page").replace("%page%", String.valueOf(i + 1))).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% toplist ".replace("%command%", label) + (i + 1))));
+            }
+
+            if (pages == 1) {
+                message = Component.text().append(pagesComponent.build()).build(); // Csak egy oldal van
+            } else if (page < pages && page == 1) {
+                message = Component.text().append(pagesComponent.build()).append(next).build(); // Van még oldal, de az elsőn vagyunk
+            } else if (page < pages) {
+                message = Component.text().append(back).append(pagesComponent.build()).append(next).build(); // Van még oldal, de nem az elsőn vagyunk
+            } else {
+                message = Component.text().append(back).append(pagesComponent.build()).build(); // Az utolsó oldalon vagyunk
+            }
+
+            player.sendMessage(message);
+
+            return true;
+
         }
 
         if (args[0].equalsIgnoreCase("items")) {
@@ -71,18 +126,15 @@ public class CommandListener implements CommandExecutor, Listener, TabCompleter 
             }
 
             Component message;
-            Component back = Component.text().content(Config.getMessage("items-list.back"))
-                    .clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page - 1))).build();
-            Component next = Component.text().content(Config.getMessage("items-list.next"))
-                    .clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page + 1))).build();
+            Component back = Component.text().content(Config.getMessage("items-list.back")).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page - 1))).build();
+            Component next = Component.text().content(Config.getMessage("items-list.next")).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (page + 1))).build();
             Builder pagesComponent = Component.text();
             for (int i = 0; i < pages; i++) {
                 if (i + 1 == page) {
                     pagesComponent.append(Component.text().content(Config.getMessage("items-list.current-page").replace("%page%", String.valueOf(i + 1))));
                     continue;
                 }
-                pagesComponent.append(Component.text().content(Config.getMessage("items-list.page").replace("%page%", String.valueOf(i + 1)))
-                        .clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (i + 1))));
+                pagesComponent.append(Component.text().content(Config.getMessage("items-list.page").replace("%page%", String.valueOf(i + 1))).clickEvent(ClickEvent.clickEvent(Action.RUN_COMMAND, "/%command% items ".replace("%command%", label) + (i + 1))));
             }
 
             if (pages == 1) {
@@ -139,7 +191,7 @@ public class CommandListener implements CommandExecutor, Listener, TabCompleter 
         }
     }
 
-    private final List<String> commands = Arrays.asList("additems", "items", "servertype", "reload", "show");
+    private final List<String> commands = Arrays.asList("additems", "items", "servertype", "reload", "show", "top");
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String lable, String[] args) {
