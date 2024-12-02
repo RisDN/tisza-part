@@ -1,0 +1,5 @@
+teleport:
+  before: 1733168671
+  world: "world"
+  commands:
+    - "spawn %player%"

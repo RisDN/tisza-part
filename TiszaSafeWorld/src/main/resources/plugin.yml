@@ -1,0 +1,11 @@
+name: TiszaSafeWorld
+main: hu.ris.tiszasafeworld.TiszaSafeWorld
+version: 1.0
+description: TiszaSafeWorld plugin
+api-version: 1.21
+author: Ris
+prefix: "TiszaSafeWorld"
+
+commands:
+  tiszasafeworld:
+    aliases: [tsw]
