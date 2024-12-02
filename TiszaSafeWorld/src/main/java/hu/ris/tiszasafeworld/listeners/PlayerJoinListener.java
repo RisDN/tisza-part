@@ -19,17 +19,25 @@ public class PlayerJoinListener implements Listener {
 
         long before = TiszaSafeWorld.getBefore();
 
-        if (!player.getWorld().equals(TiszaSafeWorld.getWorld())) {
+        boolean isInWrongWorld = true;
+        for (String world : TiszaSafeWorld.getWorlds()) {
+            if (player.getWorld().getName().equalsIgnoreCase(world)) {
+                isInWrongWorld = false;
+                break;
+            }
+        }
+
+        if (isInWrongWorld) {
             return;
         }
 
-        if (before < System.currentTimeMillis() && !TiszaSafeWorld.isLoggedInAfter(player)) {
+        if (before < System.currentTimeMillis() && !TiszaSafeWorld.isLoggedInAfter(player, player.getWorld().getName())) {
             List<String> commands = TiszaSafeWorld.getInstance().getConfig().getStringList("teleport.commands");
             for (String command : commands) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.getName()));
             }
 
-            TiszaSafeWorld.setLoggedInAfter(player, true);
+            TiszaSafeWorld.setLoggedInAfter(player, true, player.getWorld().getName());
         }
 
     }

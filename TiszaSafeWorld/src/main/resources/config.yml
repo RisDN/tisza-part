@@ -1,5 +1,7 @@
 teleport:
   before: 1733168671
-  world: "world"
+  worlds:
+    - world_nether
+    - world_the_end
   commands:
     - "spawn %player%"

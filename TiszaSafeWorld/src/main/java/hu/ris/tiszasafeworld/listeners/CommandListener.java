@@ -23,18 +23,23 @@ public class CommandListener implements CommandExecutor, Listener {
 
         if (args[0].equalsIgnoreCase("setnow")) {
 
-            if (args.length != 2) {
-                sender.sendMessage("§cHasználat: /tiszasafeworld <setnow> <world>");
+            if (args.length != 3) {
+                sender.sendMessage("§cHasználat: /tiszasafeworld <setnow> <world> <world2>");
                 return true;
             }
 
-            String worldName = args[1];
-            if (sender.getServer().getWorld(worldName) == null) {
-                sender.sendMessage("§cNem található ilyen világ.");
+            String worldName1 = args[1];
+            if (sender.getServer().getWorld(worldName1) == null) {
+                sender.sendMessage("§cNem található ilyen világ: " + worldName1);
+                return true;
+            }
+            String worldName2 = args[2];
+            if (sender.getServer().getWorld(worldName2) == null) {
+                sender.sendMessage("§cNem található ilyen világ: " + worldName2);
                 return true;
             }
 
-            TiszaSafeWorld.getInstance().setNow(worldName);
+            TiszaSafeWorld.getInstance().setNow(worldName1, worldName2);
             TiszaSafeWorld.eraseSavedPlayers();
             TiszaSafeWorld.getInstance().reloadData();
 

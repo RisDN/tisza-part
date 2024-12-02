@@ -1,22 +1,19 @@
 package hu.ris.tiszasafeworld;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import hu.ris.tiszasafeworld.listeners.CommandListener;
 import hu.ris.tiszasafeworld.listeners.PlayerJoinListener;
-import net.md_5.bungee.api.ChatColor;
 
 public class TiszaSafeWorld extends JavaPlugin {
 
     private static TiszaSafeWorld instance;
 
-    private static World world;
+    private static List<String> worlds;
     private static long before;
 
     @Override
@@ -28,7 +25,8 @@ public class TiszaSafeWorld extends JavaPlugin {
 
         saveDefaultConfig();
 
-        world = getServer().getWorld(getConfig().getString("teleport.world"));
+        worlds = getConfig().getStringList("teleport.worlds");
+
         before = getConfig().getLong("teleport.before");
 
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
@@ -44,21 +42,21 @@ public class TiszaSafeWorld extends JavaPlugin {
         return instance;
     }
 
-    public void setNow(String world) {
+    public void setNow(String world1, String world2) {
         getConfig().set("teleport.before", System.currentTimeMillis());
-        getConfig().set("teleport.world", world);
+        getConfig().set("teleport.worlds", Arrays.asList(world1, world2));
         saveConfig();
 
         reloadData();
     }
 
     public void reloadData() {
-        world = getServer().getWorld(getConfig().getString("teleport.world"));
+        worlds = getConfig().getStringList("teleport.worlds");
         before = getConfig().getLong("teleport.before");
     }
 
-    public static World getWorld() {
-        return world;
+    public static List<String> getWorlds() {
+        return worlds;
     }
 
     public static long getBefore() {
@@ -70,34 +68,13 @@ public class TiszaSafeWorld extends JavaPlugin {
         getInstance().saveConfig();
     }
 
-    public static boolean isLoggedInAfter(Player player) {
-        return getInstance().getConfig().getBoolean("players." + player.getName() + ".is-joined", false);
+    public static boolean isLoggedInAfter(Player player, String worldName) {
+        return getInstance().getConfig().getBoolean("players." + player.getName() + "." + worldName, false);
     }
 
-    public static void setLoggedInAfter(Player player, boolean value) {
-        getInstance().getConfig().set("players." + player.getName() + ".is-joined", value);
+    public static void setLoggedInAfter(Player player, boolean value, String worldName) {
+        getInstance().getConfig().set("players." + player.getName() + "." + worldName, value);
         getInstance().saveConfig();
-    }
-
-    private static final Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
-
-    public static List<String> color(List<String> messages) {
-        for (int i = 0; i < messages.size(); i++) {
-            messages.set(i, color(messages.get(i)));
-        }
-        return messages;
-    }
-
-    public static String color(String message) {
-        Matcher match = pattern.matcher(message);
-        while (match.find()) {
-            if (message.charAt(match.start() - 1) == '&') {
-                String color = message.substring(match.start(), match.end());
-                message = message.replace("&" + color, ChatColor.of(color) + "");
-                match = pattern.matcher(message);
-            }
-        }
-        return ChatColor.translateAlternateColorCodes('&', message);
     }
 
 }
