@@ -1,0 +1,11 @@
+name: TiszaPvPArena
+main: hu.ris.tiszapvparena.TiszaPvPArena
+version: 1.0
+description: TiszaPvPArena plugin
+api-version: 1.21
+author: Ris
+prefix: "TiszaPvPArena"
+
+commands:
+  tiszapvparena:
+    aliases: [tpvpa]
