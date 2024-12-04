@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import hu.ris.tiszapvparena.listeners.CommandListener;
+import hu.ris.tiszapvparena.listeners.PlayerDeathListener;
 
 public class TiszaPvPArena extends JavaPlugin {
 
@@ -20,6 +21,7 @@ public class TiszaPvPArena extends JavaPlugin {
         CommandListener commandListener = new CommandListener();
         getCommand("tiszapvparena").setExecutor(commandListener);
 
+        getServer().getPluginManager().registerEvents(new PlayerDeathListener(), instance);
         saveDefaultConfig();
 
         getLogger().info("TiszaPvPArena plugin has been enabled!");
