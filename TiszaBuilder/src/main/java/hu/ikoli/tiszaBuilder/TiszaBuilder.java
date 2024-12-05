@@ -11,6 +11,7 @@ import hu.ikoli.tiszabuilder.building.BuildingPlayer;
 import hu.ikoli.tiszabuilder.building.PlayerStats;
 import hu.ikoli.tiszabuilder.config.Config;
 import hu.ikoli.tiszabuilder.config.ServerType;
+import hu.ikoli.tiszabuilder.listeners.BlockDropItemListener;
 import hu.ikoli.tiszabuilder.listeners.CommandListener;
 import hu.ikoli.tiszabuilder.listeners.InventoryCloseListener;
 import hu.ikoli.tiszabuilder.listeners.PlayerJoinListener;
@@ -45,6 +46,7 @@ public class TiszaBuilder extends JavaPlugin {
 
 		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerQuitListener(), this);
+		getServer().getPluginManager().registerEvents(new BlockDropItemListener(), this);
 
 		LocaleLib localeLib = (LocaleLib) getServer().getPluginManager().getPlugin("LocaleLib");
 		if (localeLib != null) {
