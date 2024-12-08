@@ -194,7 +194,7 @@ public class CommandListener implements CommandExecutor, Listener, TabCompleter 
     private final List<String> commands = Arrays.asList("additems", "items", "servertype", "reload", "show", "top");
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String lable, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender.hasPermission("tiszabuilder.admin")) {
             if (args.length == 1) {
                 return commands;
