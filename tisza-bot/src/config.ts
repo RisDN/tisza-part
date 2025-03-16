@@ -6,6 +6,7 @@ export const config: Config = {
   commandCooldowns: {
     suggest: 900000, // 15 minutes
     link: 600000, // 10 minutes
+    ip: 600000, // 10 minutes
   },
 
   channels: {

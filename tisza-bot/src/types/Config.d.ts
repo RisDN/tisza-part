@@ -4,6 +4,7 @@ export type Config = {
   commandCooldowns: {
     link: number;
     suggest: number;
+    ip: number
   };
 
   channels: {
