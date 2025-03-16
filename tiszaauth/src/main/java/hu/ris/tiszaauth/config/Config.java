@@ -52,7 +52,8 @@ public class Config {
         setDefaultConfig("language.reload", "<green>Sikeresen újratöltötted a konfigurációt!");
         setDefaultConfig("language.no-lobby", "<red>Nincs beállítva lobby!");
 
-
+        setDefaultConfig("messages.twofa-required", "<red>A rangod alapján a bejelentkezéshez kétlépcsős azonosítás szükséges! Kérlek Discordon használd a /setip parancsot!");
+        setDefaultConfig("messages.twofa-not-matching", "<red>Az IP címed nem egyezik meg a beállítottal! Kérlek használd a /setip parancsot Discordon a bejelentkezéshez!");
         setDefaultConfig("messages.not_linked", "<red>Ez a felhasználó nincs összekapcsolva a Discord fiókoddal. Kérlek csatlakozz a Discord szerverünkhöz és kövesd az instrukciókat! https://discord.gg/YjBkzgCZtx");
 
         saveConfig();

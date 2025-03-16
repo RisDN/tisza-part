@@ -14,6 +14,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import hu.ris.tiszaauth.config.Config;
 import hu.ris.tiszaauth.database.MySQLConnection;
 import hu.ris.tiszaauth.listeners.PlayerJoinListener;
+import hu.ris.tiszaauth.listeners.ProxyConnectListener;
 
 @Plugin(id = "tiszaauth", name = "TiszaAuth", version = "1.0-SNAPSHOT", authors = { "Ris" })
 public class TiszaAuth {
@@ -36,6 +37,7 @@ public class TiszaAuth {
         mysqlConnection = new MySQLConnection();
 
         server.getEventManager().register(this, new PlayerJoinListener());
+        server.getEventManager().register(this, new ProxyConnectListener());
         logger.info("Tisza Auth started.");
     }
 
@@ -78,6 +80,26 @@ public class TiszaAuth {
             throw new RuntimeException("Failed to check if player is linked!", e);
         }
 
+    }
+
+    public static String getSavedIp(String playername) {
+        try {
+            PreparedStatement statement = makeStatement("SELECT * FROM `" + getMySQLConnection().getTable() + "` WHERE `username` = ? LIMIT 1;");
+            statement.setString(1, playername.toLowerCase());
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                String ip = result.getString("ip");
+                statement.close();
+                return ip;
+            }
+
+            statement.close();
+            return null;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get saved ip!", e);
+        }
     }
 
 }
