@@ -20,15 +20,11 @@ public class ProxyConnectListener {
         TiszaAuth.getServer().getScheduler().buildTask(plugin, () -> {
 
             String savedIp = TiszaAuth.getSavedIp(playerName);
-            boolean isRequired = player.hasPermission("group.moderator");
             boolean isSet = savedIp != null && savedIp != "";
-            System.out.println("savedIp: " + savedIp);
-            System.out.println("isRequired: " + isRequired);
-            System.out.println("isSet: " + isSet);
 
-            if (isRequired && !isSet) {
+            if (!isSet) {
                 TiszaAuth.getServer().getScheduler().buildTask(plugin, () -> {
-                    event.getPlayer().disconnect(MiniMessage.miniMessage().deserialize(Config.getString("messages.twofa-required").replaceAll("§", "").replaceAll("&", "")));
+                    event.getPlayer().disconnect(MiniMessage.miniMessage().deserialize(Config.getString("messages.twofa-not-set").replaceAll("§", "").replaceAll("&", "")));
                 }).schedule();
                 return;
             }
